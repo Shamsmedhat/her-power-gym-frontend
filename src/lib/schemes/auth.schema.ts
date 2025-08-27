@@ -2,35 +2,21 @@ import { useTranslations } from "next-intl";
 import { z } from "zod";
 
 export const useRegisterSchema = () => {
-  // Translation
   const t = useTranslations();
 
-  return z
-    .object({
-      username: z
-        .string({ required_error: t("username-required") })
-        .min(1, t("username-required")),
-      firstName: z
-        .string({ required_error: t("firstname-required") })
-        .min(1, t("firstname-required")),
-      lastName: z
-        .string({ required_error: t("lastname-required") })
-        .min(1, t("lastname-required")),
-      email: z.string({ required_error: t("email-required") }).email({
-        message: t("email-invalid"),
-      }),
-      phone: z
-        .string({ required_error: t("phone-required") })
-        .min(1, t("phone-required")),
-      password: z.string({ required_error: t("password-required") }).min(8, {
-        message: t("password-min", { min: 8 }),
-      }),
-      rePassword: z.string(),
-    })
-    .refine((data) => data.password === data.rePassword, {
-      message: t("password-mismatch"),
-      path: ["rePassword"],
-    });
+  return z.object({
+    name: z.string().min(1, { message: t("name-is-required") }),
+    phone: z.string().min(1, { message: t("phone-required") }),
+    password: z.string().min(5, { message: t("password-required") }),
+    role: z.enum(["super admin", "admin", "coach"], {
+      errorMap: () => ({ message: t("role-invalid") }),
+    }),
+
+    // Coach-specific fields
+    salary: z.number().optional(),
+    clients: z.array(z.string()).optional(),
+    daysOff: z.array(z.string()).optional(),
+  });
 };
 
 export type RegistrationFields = z.infer<ReturnType<typeof useRegisterSchema>>;
@@ -42,7 +28,8 @@ export const useLoginSchema = () => {
   return z.object({
     phone: z
       .string({ required_error: t("phone-required") })
-      .regex(/^01[0-9]{9}$/, {
+      // .regex(/^01[0-9]{9}$/, {
+      .min(9, {
         message: t("phone-invalid"),
       }),
     password: z

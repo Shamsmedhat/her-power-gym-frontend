@@ -1,26 +1,20 @@
-import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import Providers from "@/components/providers";
 import { routing } from "@/i18n/routing";
-import { Metadata } from "next";
 import { hasLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { Readex_Pro } from "next/font/google";
+import { cn } from "@/lib/utils/tailwind-merge";
 
-export async function generateMetadata(): Promise<Metadata> {
-  // Translation
-  const t = await getTranslations();
-
-  // Variables
-  const title = t("application-title");
-
-  return {
-    title,
-  };
-}
+const readexPro = Readex_Pro({
+  subsets: ["arabic"],
+});
 
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
+
   // Ensure that the incoming `locale` is valid
   if (!hasLocale(routing.locales, locale)) {
     notFound();
@@ -28,16 +22,18 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body>
+      <body className={cn(locale === "ar" ? readexPro.className : "")}>
         <Providers>
-          {/* Header */}
-          <Header />
+          <SidebarProvider>
+            <AppSidebar side={locale === "ar" ? "right" : "left"} />
+            <SidebarInset>
+              {/* Header */}
+              <Header />
 
-          {/* Main */}
-          {children}
-
-          {/* Footer */}
-          <Footer />
+              {/* Main */}
+              <main>{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
         </Providers>
       </body>
     </html>

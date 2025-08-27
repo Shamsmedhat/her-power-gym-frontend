@@ -7,7 +7,7 @@ import { RegisterResponse } from "@/lib/types/auth";
 export const registerAction = async (
   registrationFields: RegistrationFields
 ) => {
-  const respones = await fetch(`${process.env.API}/auth/signup`, {
+  const respones = await fetch(`${process.env.API}/auth/register`, {
     method: "POST",
     body: JSON.stringify(registrationFields),
     headers: {

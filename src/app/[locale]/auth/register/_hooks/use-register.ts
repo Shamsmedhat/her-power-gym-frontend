@@ -16,6 +16,7 @@ export default function useRegister() {
       await catchError(registerAction(fields)),
     onSuccess: () => {
       // Redirect to the the login page upon successful registration
+      //TODO
       router.push(`/auth/login?${searchParams.toString()}`);
     },
   });

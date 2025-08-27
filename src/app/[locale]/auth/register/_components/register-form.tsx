@@ -14,26 +14,42 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  MultiSelect,
+  MultiSelectContent,
+  MultiSelectGroup,
+  MultiSelectItem,
+  MultiSelectTrigger,
+  MultiSelectValue,
+} from "@/components/ui/multi-select";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   RegistrationFields,
   useRegisterSchema,
 } from "@/lib/schemes/auth.schema";
-import { useTranslations } from "next-intl";
-import { PasswordInput } from "@/components/common/password-input";
+import { useLocale, useTranslations } from "next-intl";
 import useRegister from "../_hooks/use-register";
 import SubmitFeedback from "@/components/common/submit-feedback";
 import { useRouter } from "@/i18n/routing";
+import { PasswordInput } from "@/components/common/password-input";
+import { ALL_DAYS } from "@/lib/constants/days.constant";
 
-export default function RegisterForm() {
+export default function RegisterForm({ clients }: { clients: Client[] }) {
   // Translation
   const t = useTranslations();
+  const locale = useLocale();
 
   // Navigation
   const router = useRouter();
@@ -41,24 +57,25 @@ export default function RegisterForm() {
   // Hooks
   const registerSchema = useRegisterSchema();
   const { isPending, error, register } = useRegister();
+  const days: string[] = ALL_DAYS(t);
 
   // Form
   const form = useForm<RegistrationFields>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      username: "",
-      email: "",
+      name: "",
       phone: "",
       password: "",
-      rePassword: "",
+      role: "coach",
+      salary: undefined,
+      clients: undefined,
+      daysOff: [],
     },
   });
 
   // Functions
   function onSubmit(values: RegistrationFields) {
-    register(values);
+    console.log("values", values);
   }
 
   return (
@@ -76,94 +93,21 @@ export default function RegisterForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Username */}
+            {/* Name */}
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   {/* Label */}
-                  <FormLabel>{t("username-label")}</FormLabel>
+                  <FormLabel>{t("name-label")}</FormLabel>
 
                   {/* Field */}
                   <FormControl>
                     <Input
-                      placeholder={t("username-placeholder")}
+                      placeholder={t("name-placeholder")}
                       {...field}
-                      autoComplete="username"
-                    />
-                  </FormControl>
-
-                  {/* Feedback */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* First name */}
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  {/* Label */}
-                  <FormLabel>{t("firstname-label")}</FormLabel>
-
-                  {/* Field */}
-                  <FormControl>
-                    <Input
-                      placeholder={t("firstname-placeholder")}
-                      {...field}
-                      autoComplete="given-name"
-                    />
-                  </FormControl>
-
-                  {/* Feedback */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Last name */}
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  {/* Label */}
-                  <FormLabel>{t("lastname-label")}</FormLabel>
-
-                  {/* Field */}
-                  <FormControl>
-                    <Input
-                      placeholder={t("lastname-placeholder")}
-                      {...field}
-                      autoComplete="family-name"
-                    />
-                  </FormControl>
-
-                  {/* Feedback */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Email */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  {/* Label */}
-                  <FormLabel>{t("email-label")}</FormLabel>
-
-                  {/* Field */}
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder={t("email-placeholder")}
-                      {...field}
-                      autoComplete="email"
+                      autoComplete="name"
                     />
                   </FormControl>
 
@@ -187,12 +131,9 @@ export default function RegisterForm() {
                     <Input
                       placeholder={t("phone-placeholder")}
                       {...field}
-                      autoComplete="tel-national"
+                      autoComplete="phone"
                     />
                   </FormControl>
-
-                  {/* Description */}
-                  <FormDescription>{t("phone-description")}</FormDescription>
 
                   {/* Feedback */}
                   <FormMessage />
@@ -211,13 +152,8 @@ export default function RegisterForm() {
 
                   {/* Field */}
                   <FormControl className="relative">
-                    <PasswordInput {...field} autoComplete="new-password" />
+                    <PasswordInput {...field} autoComplete="current-password" />
                   </FormControl>
-
-                  {/* Description */}
-                  <FormDescription>
-                    {t("password-min", { min: 8 })}
-                  </FormDescription>
 
                   {/* Feedback */}
                   <FormMessage />
@@ -225,21 +161,131 @@ export default function RegisterForm() {
               )}
             />
 
-            {/* Confirm password */}
+            {/* Role */}
             <FormField
               control={form.control}
-              name="rePassword"
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("role-label")}</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger dir={locale === "ar" ? "rlt" : "ltr"}>
+                        <SelectValue placeholder={t("role-trigger")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="super-admin">
+                        {t("super-admin")}
+                      </SelectItem>
+                      <SelectItem value="admin">{t("admin")}</SelectItem>
+                      <SelectItem value="coach">{t("coach")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Salary */}
+            <FormField
+              control={form.control}
+              name="salary"
               render={({ field }) => (
                 <FormItem>
                   {/* Label */}
-                  <FormLabel>{t("confirm-password-label")}</FormLabel>
+                  <FormLabel>{t("salary-label")}</FormLabel>
 
                   {/* Field */}
                   <FormControl>
-                    <PasswordInput {...field} autoComplete="new-password" />
+                    <Input
+                      type="number"
+                      placeholder={t("salary-placeholder")}
+                      value={field.value || ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(
+                          value === "" ? undefined : Number(value)
+                        );
+                      }}
+                    />
                   </FormControl>
 
                   {/* Feedback */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Clients */}
+            <FormField
+              control={form.control}
+              name="clients"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("clients-label")}</FormLabel>
+                  <MultiSelect
+                    onValuesChange={(selectedIds) => {
+                      field.onChange(selectedIds);
+                    }}
+                    values={field.value || []}
+                  >
+                    <FormControl>
+                      <MultiSelectTrigger className="w-full">
+                        <MultiSelectValue
+                          placeholder={t("clients-placeholder")}
+                          overflowBehavior="wrap"
+                        />
+                      </MultiSelectTrigger>
+                    </FormControl>
+                    <MultiSelectContent>
+                      <MultiSelectGroup>
+                        {clients.map((client) => (
+                          <MultiSelectItem key={client._id} value={client._id}>
+                            {client.name}
+                          </MultiSelectItem>
+                        ))}
+                      </MultiSelectGroup>
+                    </MultiSelectContent>
+                  </MultiSelect>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Daysoff */}
+            <FormField
+              control={form.control}
+              name="daysOff"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("daysoff-label")}</FormLabel>
+                  <MultiSelect
+                    onValuesChange={field.onChange}
+                    values={field.value}
+                  >
+                    <FormControl>
+                      <MultiSelectTrigger className="w-full">
+                        <MultiSelectValue
+                          placeholder={t("daysoff-placeholder")}
+                        />
+                      </MultiSelectTrigger>
+                    </FormControl>
+                    <MultiSelectContent>
+                      <MultiSelectGroup>
+                        {days.map((d) => {
+                          return (
+                            <MultiSelectItem key={d} value={d}>
+                              {d}
+                            </MultiSelectItem>
+                          );
+                        })}
+                      </MultiSelectGroup>
+                    </MultiSelectContent>
+                  </MultiSelect>
                   <FormMessage />
                 </FormItem>
               )}
@@ -252,10 +298,7 @@ export default function RegisterForm() {
             <Button
               type="submit"
               className="w-full"
-              disabled={
-                isPending ||
-                (form.formState.isSubmitted && !form.formState.isValid)
-              }
+              disabled={isPending || form.formState.isSubmitting}
             >
               {t("register")}
             </Button>

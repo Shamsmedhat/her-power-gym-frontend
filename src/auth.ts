@@ -12,14 +12,14 @@ export const authOptions: NextAuthOptions = {
     Credentials({
       name: "Credentials",
       credentials: {
-        email: {},
+        phone: {},
         password: {},
       },
       authorize: async (credentials) => {
         const response = await fetch(`${process.env.API}/auth/login`, {
           method: "POST",
           body: JSON.stringify({
-            email: credentials?.email,
+            phone: credentials?.phone,
             password: credentials?.password,
           }),
           headers: {

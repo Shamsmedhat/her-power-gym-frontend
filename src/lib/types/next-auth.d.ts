@@ -9,13 +9,17 @@ declare module "next-auth" {
    */
   interface User {
     user: {
-      username: string;
-      firstName: string;
-      lastName: string;
-      email: string;
+      name: string;
       phone: string;
+      password: string;
       role: string;
-      isVerified: boolean;
+      userId: string;
+      salary?: number;
+      clients?: [string];
+      daysOff?: [string];
+      daysOffHistory: [
+        { daysOff: [string]; changedBy: string; changedAt: date }
+      ];
     } & DatabaseProperies;
     token: string;
   }

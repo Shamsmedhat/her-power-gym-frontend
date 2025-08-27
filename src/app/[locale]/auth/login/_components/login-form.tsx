@@ -122,7 +122,8 @@ export default function LoginForm() {
               className="w-full"
               disabled={
                 isPending ||
-                (form.formState.isSubmitted && !form.formState.isValid)
+                // (form.formState.isSubmitted && !form.formState.isValid)
+                form.formState.isSubmitting
               }
             >
               {t("login")}
