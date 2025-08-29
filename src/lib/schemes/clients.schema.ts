@@ -22,3 +22,5 @@ export const useClientsSchema = () => {
       .optional(),
   });
 };
+
+export type ClientsFields = z.infer<ReturnType<typeof useClientsSchema>>;

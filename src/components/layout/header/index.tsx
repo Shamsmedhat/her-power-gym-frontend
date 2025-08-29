@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { SwitchLocale } from "./components/switch-locale";
 import { signOut, useSession } from "next-auth/react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function Header() {
   // Translation
@@ -29,7 +30,12 @@ export function Header() {
 
   return (
     <header className="sticky flex top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-end">
+      <div className="container flex h-16 items-center justify-between">
+        {/* Sidebar trigger on mobile */}
+        <div className="md:hidden">
+          <SidebarTrigger />
+        </div>
+
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           {/* Navigation */}

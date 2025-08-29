@@ -12,12 +12,16 @@ export default async function Page() {
   if (errors) return <p>Error</p>;
 
   return (
-    <section className="min-h-screen flex justify-center items-center flex-col gap-4 my-6">
+    <section className="min-h-screen flex justify-center items-center flex-col gap-6 my-6 px-4">
       {/* Heading */}
-      <h1 className="font-bold text-5xl">{t("add-new-employee")}</h1>
+      <h1 className="font-bold text-3xl sm:text-5xl text-center">
+        {t("add-new-employee")}
+      </h1>
 
       {/* Form */}
-      <RegisterForm clients={payload.data.clients} />
+      <div className="w-full max-w-2xl">
+        <RegisterForm clients={payload.data.clients} />
+      </div>
     </section>
   );
 }

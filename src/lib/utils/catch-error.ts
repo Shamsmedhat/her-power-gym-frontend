@@ -1,21 +1,34 @@
-import { AppError, AuthenticationError, AuthorizationError } from "./app-errors";
+import {
+  AppError,
+  AuthenticationError,
+  AuthorizationError,
+} from "./app-errors";
 
-export default async function catchError<T, E extends new (message?: string) => AuthenticationError | AuthorizationError | AppError>(
+export default async function catchError<
+  T,
+  E extends new (message?: string) =>
+    | AuthenticationError
+    | AuthorizationError
+    | AppError
+>(
   promise: Promise<APIResponse<T>>,
   errorsToCatch?: E[] | null
 ): Promise<[SuccessfulResponse<T>, null] | [null, InstanceType<E>]> {
   try {
     const data = await promise;
 
-    if ("code" in data) {
-      if (data.code === 401) throw new AuthenticationError(data.message, data.code);
+    if ("statusCode" in data) {
+      if (data.statusCode === 401)
+        throw new AuthenticationError(data.message, data.statusCode);
 
-      if (data.code === 403) throw new AuthorizationError(data.message, data.code);
+      if (data.statusCode === 403)
+        throw new AuthorizationError(data.message, data.statusCode);
 
-      throw new AppError(data.message, data.code);
+      throw new AppError(data.message, data.statusCode);
     }
 
-    return [data, null];
+    // At this point, data is guaranteed to be SuccessfulResponse<T>
+    return [data as SuccessfulResponse<T>, null];
   } catch (err) {
     const error = err as InstanceType<E>;
 

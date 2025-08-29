@@ -21,7 +21,6 @@ export default function useLogin() {
         callbackUrl: decodeURIComponent(searchParams.get("callbackUrl") || "/"),
       });
 
-      console.log("response", response);
       if (response?.error) throw new AuthenticationError(response.error);
 
       return response;

@@ -8,7 +8,7 @@ export const getClients = async () => {
   const response = await fetch(`${process.env.API}/clients`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token?.token}`,
+      Authorization: `Bearer ${token}`,
       ...JSON_HEADER,
     },
   });

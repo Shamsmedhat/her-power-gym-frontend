@@ -4,13 +4,13 @@ import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { getTranslations } from "next-intl/server";
 import { getSubscriptions } from "@/lib/apis/subscription.api";
+import SubscriptionRow from "./subscription-row";
 
 export default async function SubscriptionsList() {
   // Translation
@@ -19,43 +19,62 @@ export default async function SubscriptionsList() {
   // Fetch
   const [payload, error] = await catchError(getSubscriptions());
 
+  // Error
   if (error) return <p>{error.message}</p>;
 
   return (
-    <Table>
-      <TableCaption className="capitalize">{t("subs-list-dec")}</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-fit text-start">
-            {t("subscription-name")}
-          </TableHead>
-          <TableHead className="text-start">{t("subscription-type")}</TableHead>
-          <TableHead className="text-start">{t("duration-days")}</TableHead>
-          <TableHead className="text-start">{t("total-sections")}</TableHead>
-          <TableHead className="text-start">
-            {t("subscription-price")}
-          </TableHead>
-          <TableHead className="text-start">
-            {t("subscription-description")}
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {payload.data.subscriptionPlans.map((s) => {
-          return (
-            <TableRow key={s._id}>
-              <TableCell className="font-medium">{s.name}</TableCell>
-              <TableCell>{s.type}</TableCell>
-              <TableCell>{s.durationDays ?? "-"}</TableCell>
-              <TableCell className="text-start">
-                {Number(s.totalSessions) === 0 ? "-" : Number(s.totalSessions)}
-              </TableCell>
-              <TableCell className="text-start">{s.price}</TableCell>
-              <TableCell className="text-start">{s.description}</TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+    <div className="w-full overflow-x-auto">
+      <Table className="min-w-[720px] sm:min-w-0">
+        <TableCaption className="capitalize">{t("subs-list-dec")}</TableCaption>
+
+        {/* Table header */}
+        <TableHeader>
+          <TableRow>
+            {/* Name */}
+            <TableHead className="w-fit text-start">
+              {t("subscription-name")}
+            </TableHead>
+
+            {/* Type */}
+            <TableHead className="text-start">
+              {t("subscription-type")}
+            </TableHead>
+
+            {/* Duration days */}
+            <TableHead className="text-start">{t("duration-days")}</TableHead>
+
+            {/* Total sections */}
+            <TableHead className="text-start">{t("total-sections")}</TableHead>
+
+            {/* Price */}
+            <TableHead className="text-start">
+              {t("subscription-price")}
+            </TableHead>
+
+            {/* Subscription description */}
+            <TableHead className="text-start">
+              {t("subscription-description")}
+            </TableHead>
+
+            {/* Update btn */}
+            <TableHead className="text-start">
+              {t("update-subscription")}
+            </TableHead>
+
+            {/* Delete btn */}
+            <TableHead className="text-start">
+              {t("delete-subscription")}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+
+        {/* Table body (rows) */}
+        <TableBody>
+          {payload.data.subscriptionPlans.map((sub) => (
+            <SubscriptionRow sub={sub} key={sub._id} />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

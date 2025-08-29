@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Readex_Pro } from "next/font/google";
-import { cn } from "@/lib/utils/tailwind-merge";
+import { Toaster } from "@/components/ui/sonner";
 
 const readexPro = Readex_Pro({
   subsets: ["arabic"],
@@ -21,17 +21,22 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
   }
 
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body className={cn(locale === "ar" ? readexPro.className : "")}>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      suppressHydrationWarning
+    >
+      <body className={readexPro.className} suppressHydrationWarning>
         <Providers>
           <SidebarProvider>
             <AppSidebar side={locale === "ar" ? "right" : "left"} />
             <SidebarInset>
-              {/* Header */}
+              {/* Header with mobile sidebar trigger space preserved */}
               <Header />
 
               {/* Main */}
-              <main>{children}</main>
+              <main className="p-3 sm:p-6">{children}</main>
+              <Toaster richColors position="top-center" theme="light" />
             </SidebarInset>
           </SidebarProvider>
         </Providers>

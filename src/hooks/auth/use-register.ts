@@ -2,7 +2,7 @@ import { useRouter } from "@/i18n/routing";
 import { RegistrationFields } from "@/lib/schemes/auth.schema";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { registerAction } from "../_actions/register.action";
+import { registerAction } from "../../lib/actions/auth/register.action";
 import catchError from "@/lib/utils/catch-error";
 
 export default function useRegister() {

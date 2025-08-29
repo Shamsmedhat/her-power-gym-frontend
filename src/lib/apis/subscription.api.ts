@@ -8,13 +8,15 @@ export const getSubscriptions = async () => {
   const response = await fetch(`${process.env.API}/subscriptions`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token?.token}`,
+      Authorization: `Bearer ${token}`,
       ...JSON_HEADER,
+    },
+    next: {
+      tags: ["subscriptions"],
     },
   });
   const payload: APIResponse<{ data: { subscriptionPlans: Subscription[] } }> =
     await response.json();
 
-  console.log("payload", payload);
   return payload;
 };

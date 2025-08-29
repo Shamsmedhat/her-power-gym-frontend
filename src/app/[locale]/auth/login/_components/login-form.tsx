@@ -24,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginFields, useLoginSchema } from "@/lib/schemes/auth.schema";
 import { PasswordInput } from "@/components/common/password-input";
-import useLogin from "../_hooks/use-login";
+import useLogin from "../../../../../hooks/auth/use-login";
 import SubmitFeedback from "@/components/common/submit-feedback";
 import { useRouter } from "@/i18n/routing";
 

@@ -6,12 +6,16 @@ export default function Page() {
   const t = useTranslations();
 
   return (
-    <main className="min-h-screen flex flex-col gap-16 items-center justify-center">
+    <main className="min-h-screen flex flex-col gap-8 sm:gap-16 items-center justify-center px-4">
       {/* Heading */}
-      <h1 className="font-bold text-5xl">{t("welcome-back")}</h1>
+      <h1 className="font-bold text-3xl sm:text-5xl text-center">
+        {t("welcome-back")}
+      </h1>
 
       {/* Form */}
-      <LoginForm />
+      <div className="w-full max-w-md">
+        <LoginForm />
+      </div>
     </main>
   );
 }

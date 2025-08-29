@@ -40,7 +40,7 @@ import {
   useRegisterSchema,
 } from "@/lib/schemes/auth.schema";
 import { useLocale, useTranslations } from "next-intl";
-import useRegister from "../_hooks/use-register";
+import useRegister from "../../../../../hooks/auth/use-register";
 import SubmitFeedback from "@/components/common/submit-feedback";
 import { useRouter } from "@/i18n/routing";
 import { PasswordInput } from "@/components/common/password-input";

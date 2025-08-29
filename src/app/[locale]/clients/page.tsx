@@ -3,9 +3,11 @@ import ClientsList from "./_components/clients-list";
 
 export default function page() {
   return (
-    <section>
+    <section className="container  px-3 sm:p-0 ">
       <Suspense fallback={<p>loading...</p>}>
-        <ClientsList />
+        <div className="w-full overflow-x-auto">
+          <ClientsList />
+        </div>
       </Suspense>
     </section>
   );

@@ -9,5 +9,5 @@ export const getTokenDecoded = async () => {
     secret: process.env.NEXTAUTH_SECRET!,
   });
 
-  return token;
+  return token?.token;
 };

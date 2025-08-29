@@ -29,10 +29,8 @@ export const authOptions: NextAuthOptions = {
 
         const payload: APIResponse<LoginResponse> = await response.json();
 
-        console.log("payload", payload);
-
         // Throw an auth error if the login has failed
-        if ("code" in payload) {
+        if ("statusCode" in payload) {
           throw new AuthenticationError(payload.message);
         }
 
