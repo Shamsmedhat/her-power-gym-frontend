@@ -147,5 +147,6 @@
   "user-created-success": "تم إنشاء المستخدم بنجاح",
   "create-user": "تسجيل مستخدم جديد",
   "create-user-description": "تسجيل مستخدم جديد في الجيم",
-  "create": "تسجيل"
+  "create": "تسجيل",
+  "select-days-off": "حدد ايام الاجازة"
 }

@@ -147,5 +147,6 @@
   "user-created-success": "user created successfully",
   "create-user": "create user",
   "create-user-description": "create a new user in the gym",
-  "create": "create"
+  "create": "create",
+  "select-days-off": "select days off"
 }
