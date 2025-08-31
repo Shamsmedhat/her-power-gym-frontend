@@ -75,7 +75,7 @@ export default function RegisterForm({ clients }: { clients: Client[] }) {
 
   // Functions
   function onSubmit(values: RegistrationFields) {
-    console.log("values", values);
+    register(values);
   }
 
   return (
