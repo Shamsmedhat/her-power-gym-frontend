@@ -52,19 +52,30 @@ export default function SubscriptionRow({
         </Tooltip>
       </TableCell>
 
+      {/* Subscription type */}
       <TableCell className="whitespace-nowrap">{sub.type}</TableCell>
+
+      {/* Subscription duration days */}
       <TableCell className="whitespace-nowrap">
         {sub.durationDays ?? "-"}
       </TableCell>
+
+      {/* Subscription total sessions */}
       <TableCell className="text-start whitespace-nowrap">
         {Number(sub.totalSessions) === 0 ? "-" : Number(sub.totalSessions)}
       </TableCell>
+
+      {/* Subscribtion price */}
       <TableCell className="text-start whitespace-nowrap">
         {sub.price}
       </TableCell>
+
+      {/* Subscription desc */}
       <TableCell className="text-start max-w-[220px] truncate">
         {sub.description}
       </TableCell>
+
+      {/* Update */}
       <TableCell className="text-start">
         <SubscriptionUpdateForm subscription={sub}>
           <Button
@@ -75,6 +86,8 @@ export default function SubscriptionRow({
           </Button>
         </SubscriptionUpdateForm>
       </TableCell>
+
+      {/* Delete */}
       <TableCell className="text-start uppercase">
         <Button
           variant="destructive"
