@@ -3,13 +3,13 @@ import { Wallet, UserRound, IdCardLanyard } from "lucide-react";
 export const SIDEBAR_LINKS = (t: (key: string) => string) => {
   return [
     {
-      title: t("clients-label"),
+      title: t("clients"),
       url: "/clients",
       icon: UserRound,
     },
     {
-      title: t("employees"),
-      url: "/employees",
+      title: t("users"),
+      url: "/users",
       icon: IdCardLanyard,
     },
     {

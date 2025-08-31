@@ -1,7 +1,8 @@
-declare type DatabaseProperies = {
+interface DatabaseProperties {
   _id: string;
   createdAt: string;
-};
+  updatedAt: string;
+}
 
 declare type SuccessfulResponse<T> = {
   message: "success";
