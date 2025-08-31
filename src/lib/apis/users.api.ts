@@ -1,39 +1,41 @@
 import { JSON_HEADER } from "../constants/api.constant";
 import { getTokenDecoded } from "../utils/get-token";
 
-export const getClients = async () => {
+export const getUsers = async () => {
   // Get token
   const token = await getTokenDecoded();
 
-  const response = await fetch(`${process.env.API}/clients`, {
+  const response = await fetch(`${process.env.API}/users`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
       ...JSON_HEADER,
     },
     next: {
-      tags: ["clients"],
+      tags: ["users"],
     },
   });
-  const payload: APIResponse<{ data: { clients: Client[] } }> =
+  const payload: APIResponse<{ data: { users: User[] } }> =
     await response.json();
 
   return payload;
 };
 
-export const getClient = async (id: string) => {
+export const getUser = async (id: string) => {
   // Get token
   const token = await getTokenDecoded();
 
-  const response = await fetch(`${process.env.API}/clients/${id}`, {
+  const response = await fetch(`${process.env.API}/users/${id}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
       ...JSON_HEADER,
     },
+    next: {
+      tags: ["users"],
+    },
   });
-  const payload: APIResponse<{ data: { client: Client } }> =
-    await response.json();
+  const payload: APIResponse<{ data: { user: User } }> = await response.json();
 
   return payload;
 };

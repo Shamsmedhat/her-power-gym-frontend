@@ -2,20 +2,18 @@
 
 import { getTokenDecoded } from "@/lib/utils/get-token";
 import { revalidateTag } from "next/cache";
-import { SubscriptionFields } from "./../../schemes/subscriptions.schema";
 import { JSON_HEADER } from "@/lib/constants/api.constant";
+import { ClientsFields } from "@/lib/schemes/clients.schema";
 
-// Create subscription
-export const createSubscriptionAction = async (
-  subscriptionFields: SubscriptionFields
-) => {
+// Create user
+export const createClientAction = async (clientsFields: ClientsFields) => {
   // User token
   const token = await getTokenDecoded();
 
   // Fetch
-  const respones = await fetch(`${process.env.API}/subscriptions`, {
+  const respones = await fetch(`${process.env.API}/clients`, {
     method: "POST",
-    body: JSON.stringify(subscriptionFields),
+    body: JSON.stringify(clientsFields),
     headers: {
       Authorization: `Bearer ${token}`,
       ...JSON_HEADER,
@@ -23,9 +21,10 @@ export const createSubscriptionAction = async (
   });
 
   // Payload
-  const payload: APIResponse<{ data: { subscriptionPlans: Subscription } }> =
+  const payload: APIResponse<{ data: { client: Client } }> =
     await respones.json();
-  console.log("payload", payload);
+
+  revalidateTag("clients");
 
   // Error
   if ("statusCode" in payload && payload.statusCode === 401) {
@@ -34,26 +33,25 @@ export const createSubscriptionAction = async (
   if ("status" in payload && payload.status === "error") {
     throw new Error(payload.message || "Unknown server error");
   }
-  revalidateTag("subscriptions");
 
   return payload;
 };
 
-// Update subscription
-export const updateSubscriptionAction = async ({
-  subscriptionUpdatedFields,
+// Update user
+export const updateClientAction = async ({
+  clientUpdatedFields,
   id,
 }: {
-  subscriptionUpdatedFields: SubscriptionFields;
+  clientUpdatedFields: ClientsFields;
   id: string;
 }) => {
   // User token
   const token = await getTokenDecoded();
 
   // Fetch
-  const respones = await fetch(`${process.env.API}/subscriptions/${id}`, {
+  const respones = await fetch(`${process.env.API}/clients/${id}`, {
     method: "PATCH",
-    body: JSON.stringify(subscriptionUpdatedFields),
+    body: JSON.stringify(clientUpdatedFields),
     headers: {
       Authorization: `Bearer ${token}`,
       ...JSON_HEADER,
@@ -61,43 +59,43 @@ export const updateSubscriptionAction = async ({
   });
 
   // Payload
-  const payload: APIResponse<{ data: { subscriptionPlans: Subscription } }> =
+  const payload: APIResponse<{ data: { client: Client } }> =
     await respones.json();
+
+  revalidateTag("clients");
 
   // Error
   if ("statusCode" in payload && payload.statusCode === 401) {
     throw new Error(payload.message || "Unknown server error");
   }
-  revalidateTag("subscriptions");
 
   return payload;
 };
 
-// Delete subscription
-export const deleteSubscriptionAction = async (id: string) => {
+// Delete user
+export const deleteClientAction = async (id: string) => {
   // User token
   const token = await getTokenDecoded();
 
   // Fetch
-  const respones = await fetch(`${process.env.API}/subscriptions/${id}`, {
+  const respones = await fetch(`${process.env.API}/clients/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  revalidateTag("subscriptions");
-
   // Handle 204 No Content response
   if (respones.status === 204) {
+    revalidateTag("clients");
     return {
       status: "success",
-      message: "Subscription plan deleted successfully",
+      message: "Client deleted successfully",
     };
   }
 
   // For other status codes, try to parse JSON
-  const payload: APIResponse<{ data: { subscriptionPlans: Subscription } }> =
+  const payload: APIResponse<{ data: { client: Client } }> =
     await respones.json();
 
   // Error

@@ -5,15 +5,35 @@ declare type Client = {
   clientId: string;
 
   subscription: {
-    plan: Types.ObjectId;
+    plan: {
+      _id: Types.ObjectId;
+      name: string;
+      type: string;
+      durationDays: number;
+      totalSessions: number;
+      price: number;
+      description: string;
+    };
     priceAtPurchase: number;
     startDate: Date;
     endDate: Date;
   };
 
   privatePlan?: {
-    plan?: Types.ObjectId;
-    coach?: Types.ObjectId;
+    plan?: {
+      _id: Types.ObjectId;
+      name: string;
+      type: string;
+      totalSessions: number;
+      price: number;
+      description: string;
+      durationDays: number;
+    };
+    coach?: {
+      _id: Types.ObjectId;
+      name: string;
+      phone: string;
+    };
     totalSessions?: number;
     sessions?: Types.ObjectId[];
     priceAtPurchase?: number;

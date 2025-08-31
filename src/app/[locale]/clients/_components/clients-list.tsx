@@ -6,20 +6,27 @@ import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { getTranslations } from "next-intl/server";
+import ClientRow from "./client-row";
 
-export default async function ClientsList() {
+export default async function ClientsList({
+  subscriptions,
+  users,
+}: {
+  subscriptions: Subscription[];
+  users: User[];
+}) {
   // Translation
   const t = await getTranslations();
 
-  // Fetch
+  // Fetch clients
   const [payload, error] = await catchError(getClients());
 
+  // Error
   if (error) return <p>{error.message}</p>;
 
   return (
@@ -27,23 +34,54 @@ export default async function ClientsList() {
       <TableCaption className="capitalize">{t("client-list-dec")}</TableCaption>
       <TableHeader>
         <TableRow>
+          {/* Name */}
           <TableHead className="w-fit text-start">{t("client-name")}</TableHead>
+
+          {/* ID */}
           <TableHead className="text-start">{t("client-id")}</TableHead>
+
+          {/* Phone */}
           <TableHead className="text-start">{t("clinet-phone")}</TableHead>
+
+          {/* Subscription */}
           <TableHead className="text-start">{t("subscription")}</TableHead>
+
+          {/* Start date */}
           <TableHead className="text-start">
             {t("subscription-start-date")}
           </TableHead>
+
+          {/* End date */}
           <TableHead className="text-start">
             {t("subscription-end-date")}
           </TableHead>
+
+          {/* Price main */}
           <TableHead className="text-start">
             {t("subscription-price")}
           </TableHead>
+
+          {/* Private type */}
           <TableHead className="text-start">{t("private")}</TableHead>
+
+          {/* Coach name */}
           <TableHead className="text-start">{t("private-coach")}</TableHead>
+
+          {/* Price private */}
+          <TableHead className="text-start">{t("private-price")}</TableHead>
+
+          {/* Total price */}
+          <TableHead className="text-start">{t("total-price")}</TableHead>
+
+          {/* Delete btn */}
+          <TableHead className="text-start">{t("delete")}</TableHead>
+
+          {/* Total price */}
+          <TableHead className="text-start">{t("update")}</TableHead>
         </TableRow>
       </TableHeader>
+
+      {/* Table body */}
       <TableBody>
         {payload.data.clients.map((c) => {
           const subsStartDate = format(
@@ -53,28 +91,14 @@ export default async function ClientsList() {
           const subsEndDate = format(c.subscription.endDate, "MMM / dd / yyyy");
 
           return (
-            <TableRow key={c._id}>
-              <TableCell className="font-medium">{c.name}</TableCell>
-              <TableCell>{c.clientId}</TableCell>
-              <TableCell>{c.phone}</TableCell>
-              <TableCell className="text-start">
-                {/* {c.subscription.plan} */}
-                plan
-              </TableCell>
-              <TableCell className="text-start">{subsStartDate}</TableCell>
-              <TableCell className="text-start">{subsEndDate}</TableCell>
-              <TableCell className="text-start">
-                {c.subscription.priceAtPurchase}
-              </TableCell>
-              <TableCell className="text-start">
-                {/* {c.privatePlan?.plan ?? "-"} */}
-                private plan
-              </TableCell>
-              <TableCell className="text-start">
-                {/* {c.privatePlan?.coach ?? "-"} */}
-                private coach
-              </TableCell>
-            </TableRow>
+            <ClientRow
+              client={c}
+              key={c._id}
+              subsStartDate={subsStartDate}
+              subsEndDate={subsEndDate}
+              subscriptions={subscriptions}
+              users={users}
+            />
           );
         })}
       </TableBody>
