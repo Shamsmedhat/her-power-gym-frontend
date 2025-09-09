@@ -37,3 +37,23 @@ export const getClient = async (id: string) => {
 
   return payload;
 };
+
+export const getCoachClients = async () => {
+  // Get token
+  const token = await getTokenDecoded();
+
+  const response = await fetch(`${process.env.API}/clients/coach/my-clients`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...JSON_HEADER,
+    },
+    next: {
+      tags: ["coach-clients"],
+    },
+  });
+  const payload: APIResponse<{ data: { clients: Client[] } }> =
+    await response.json();
+
+  return payload;
+};

@@ -14,7 +14,6 @@ export default async function page() {
   if (errorUsers || errorClients)
     return <p>{errorUsers?.message || errorClients?.message}</p>;
 
-  console.log("payloadClients", payloadClients);
   return (
     <section>
       {/* Create new employee */}
@@ -23,10 +22,7 @@ export default async function page() {
 
       <Suspense fallback={<p>loading...</p>}>
         <div className="w-full overflow-x-auto">
-          <UserList
-            users={payloadUsers?.data.users}
-            clients={payloadClients?.data.clients || []}
-          />
+          <UserList users={payloadUsers?.data.users} />
         </div>
       </Suspense>
     </section>

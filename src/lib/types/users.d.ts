@@ -7,7 +7,7 @@ interface User extends DatabaseProperties {
 
   // Optional fields
   salary?: number;
-  clients?: string[];
+  clients?: Client[];
   daysOff?: string[];
   daysOffHistory: {
     daysOff: string[];

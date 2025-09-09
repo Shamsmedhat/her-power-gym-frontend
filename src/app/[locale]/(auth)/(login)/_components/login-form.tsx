@@ -110,7 +110,13 @@ export default function LoginForm() {
             />
 
             {/* Feedback */}
-            {<SubmitFeedback>{error?.message}</SubmitFeedback>}
+            {
+              <SubmitFeedback>
+                {error?.message.includes("Incorrect")
+                  ? t("incorrect-phone-or-password")
+                  : error?.message}
+              </SubmitFeedback>
+            }
 
             {/* Submit */}
             <Button

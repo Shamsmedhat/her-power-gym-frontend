@@ -37,22 +37,29 @@ export function Header() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center justify-between gap-6 w-full">
           {/* Navigation */}
           {session ? (
-            <div className="flex flex-col items-end">
-              {t("hello-user", { user: session.user.name })}
-              <Button
-                variant="link"
-                className="p-0 h-fit font-semibold"
-                onClick={() => signOut()}
-              >
-                {t("logout")} <LogOut />
-              </Button>
+            <div className="flex justify-between items-center w-full">
+              <div className="flex items-center gap-2 uppercase text-xl font-bold my-3 py-2 italic text-main justify-center">
+                <Link href="/" className="flex items-center space-x-2">
+                  <span>{t("logo")}</span>
+                </Link>
+              </div>
+              <div className="flex items-end flex-col">
+                <span>{t("hello-user", { user: session.user.name })}</span>
+                <Button
+                  variant="link"
+                  className="p-0 h-fit font-semibold"
+                  onClick={() => signOut()}
+                >
+                  {t("logout")} <LogOut />
+                </Button>
+              </div>
             </div>
           ) : (
             <Link
-              href="/auth/login"
+              href="/"
               className="text-sm font-medium transition-colors hover:text-primary"
             >
               {t("login")}
@@ -89,7 +96,7 @@ export function Header() {
         <div className="md:hidden">
           <div className="container py-4 space-y-2">
             <Link
-              href="/auth/login"
+              href="/"
               className="block py-2 text-sm font-medium transition-colors hover:text-primary"
               onClick={closeMenu}
             >

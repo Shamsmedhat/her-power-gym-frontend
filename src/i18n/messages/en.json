@@ -163,5 +163,16 @@
   "clients-private": "clients private",
   "work-information": "work information",
   "monthly-salary": "monthly salary",
-  "active-clients": "Active Clients"
+  "active-clients": "Active Clients",
+  "incorrect-phone-or-password": "Incorrect phone or password.",
+  "active-clients-0": "active clients",
+  "clients-msg": "Currently working with {clientsLength} clients",
+  "details": "details",
+  "active": "active",
+  "contact-information": "Contact Information",
+  "days-off-0": "Days Off",
+  "days": "days",
+  "phone": "phone",
+  "join-date": "join date",
+  "zero": "zero"
 }

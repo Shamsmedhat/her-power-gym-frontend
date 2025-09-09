@@ -8,13 +8,7 @@ import {
 import UserWithClients from "./user-with-clients";
 import { useTranslations } from "next-intl";
 
-export default function UserList({
-  users,
-  clients,
-}: {
-  users: User[];
-  clients: Client[];
-}) {
+export default function UserList({ users }: { users: User[] }) {
   // Translation
   const t = useTranslations();
 
@@ -57,7 +51,7 @@ export default function UserList({
       {/* Table body */}
       <TableBody>
         {users?.map((user) => (
-          <UserWithClients key={user._id} user={user} allClients={clients} />
+          <UserWithClients key={user._id} user={user} />
         ))}
       </TableBody>
     </Table>

@@ -56,7 +56,7 @@ export default function RegisterForm({ clients }: { clients: Client[] }) {
   // Hooks
   const registerSchema = useRegisterSchema();
   const { isPending, error, register } = useRegister();
-  const days: string[] = ALL_DAYS(t);
+  const days: string[] = ALL_DAYS;
 
   // State
   const [open, setOpen] = useState(false);

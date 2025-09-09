@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/multi-select";
 import { useUpdateUser } from "@/hooks/user/use-user";
 import { useUsersSchema, UsersFields } from "@/lib/schemes/employees.schema";
+import { ALL_DAYS } from "@/lib/constants/days.constant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
@@ -44,11 +45,9 @@ import { LoaderCircle } from "lucide-react";
 
 export default function UserUpdateForm({
   user,
-  clients,
   children,
 }: {
   user: User;
-  clients: Client[];
   children: React.ReactNode;
 }) {
   // Translation
@@ -68,7 +67,6 @@ export default function UserUpdateForm({
       role: user.role,
       salary: user.salary,
       daysOff: user.daysOff || [],
-      clients: user.clients || [],
     },
   });
 
@@ -92,7 +90,6 @@ export default function UserUpdateForm({
       role: user.role,
       salary: user.salary,
       daysOff: normalizedDaysOff,
-      clients: user.clients || [],
     });
   }, [user, form]);
 
@@ -106,8 +103,6 @@ export default function UserUpdateForm({
   };
 
   const onSubmit = (values: UsersFields) => {
-    console.log("Submitting form with values:", values);
-    console.log("Days off being sent:", values.daysOff);
     updateUser(
       {
         userUpdatedFields: values,
@@ -220,7 +215,6 @@ export default function UserUpdateForm({
               control={form.control}
               name="daysOff"
               render={({ field }) => {
-                console.log("Days off field value:", field.value);
                 return (
                   <FormItem>
                     <FormLabel>{t("days-off")}</FormLabel>
@@ -236,39 +230,15 @@ export default function UserUpdateForm({
                         </MultiSelectTrigger>
                         <MultiSelectContent>
                           <MultiSelectGroup>
-                            <MultiSelectItem value="Monday" badgeLabel="Monday">
-                              Monday
-                            </MultiSelectItem>
-                            <MultiSelectItem
-                              value="Tuesday"
-                              badgeLabel="Tuesday"
-                            >
-                              Tuesday
-                            </MultiSelectItem>
-                            <MultiSelectItem
-                              value="Wednesday"
-                              badgeLabel="Wednesday"
-                            >
-                              Wednesday
-                            </MultiSelectItem>
-                            <MultiSelectItem
-                              value="Thursday"
-                              badgeLabel="Thursday"
-                            >
-                              Thursday
-                            </MultiSelectItem>
-                            <MultiSelectItem value="Friday" badgeLabel="Friday">
-                              Friday
-                            </MultiSelectItem>
-                            <MultiSelectItem
-                              value="Saturday"
-                              badgeLabel="Saturday"
-                            >
-                              Saturday
-                            </MultiSelectItem>
-                            <MultiSelectItem value="Sunday" badgeLabel="Sunday">
-                              Sunday
-                            </MultiSelectItem>
+                            {ALL_DAYS.map((day) => (
+                              <MultiSelectItem
+                                key={day}
+                                value={day}
+                                badgeLabel={day}
+                              >
+                                {day}
+                              </MultiSelectItem>
+                            ))}
                           </MultiSelectGroup>
                         </MultiSelectContent>
                       </MultiSelect>
@@ -280,7 +250,7 @@ export default function UserUpdateForm({
             />
 
             {/* Clients field - only show for coaches */}
-            {selectedRole === "coach" && (
+            {/* {selectedRole === "coach" && (
               <FormField
                 control={form.control}
                 name="clients"
@@ -314,7 +284,7 @@ export default function UserUpdateForm({
                   </FormItem>
                 )}
               />
-            )}
+            )} */}
 
             <div className="flex justify-end space-x-2">
               <Button

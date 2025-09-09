@@ -163,5 +163,16 @@
   "clients-private": "عملاء البرايفت",
   "work-information": "معلوماتي",
   "monthly-salary": "راتب شهري",
-  "active-clients": "عدد العملاء البرايفت"
+  "active-clients": "عدد العملاء البرايفت",
+  "incorrect-phone-or-password": "هاتف أو كلمة مرور غير صحيح.",
+  "active-clients-0": "عملاء البرايفت",
+  "clients-msg": "تعمل حاليا مع  {clientsLength} عميل",
+  "details": "تفاصيل",
+  "active": "نشط",
+  "contact-information": "معلومات التواصل",
+  "days-off-0": "ايام الاجازة",
+  "days": "أيام",
+  "join-date": "تاريخ الانضمام",
+  "phone": "التليفون",
+  "zero": "صفر"
 }

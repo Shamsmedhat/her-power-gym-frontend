@@ -102,7 +102,7 @@ export default function ClientUpdateForm({
             totalSessions: client.privatePlan.totalSessions || 0,
             priceAtPurchase: client.privatePlan.priceAtPurchase || 0,
           }
-        : undefined,
+        : null,
     },
   });
 
@@ -113,6 +113,7 @@ export default function ClientUpdateForm({
 
   // Functions
   function onSubmit(values: ClientsFields) {
+    console.log("values", values);
     updateClient(
       { clientUpdatedFields: values, id: client._id },
       {
@@ -310,7 +311,8 @@ export default function ClientUpdateForm({
                         }
                       );
                     } else {
-                      form.setValue("privatePlan", undefined);
+                      // Cancel/Remove private plan by setting it to undefined
+                      form.setValue("privatePlan", null);
                     }
                   }}
                 />

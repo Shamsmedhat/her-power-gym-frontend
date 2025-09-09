@@ -16,12 +16,10 @@ export default function UserRow({
   user,
   clients,
   createdDate,
-  allClients,
 }: {
   user: User;
   clients: Client[];
   createdDate: string;
-  allClients: Client[];
 }) {
   // Translation
   const t = useTranslations();
@@ -113,7 +111,7 @@ export default function UserRow({
       <TableCell className="text-start">{createdDate}</TableCell>
 
       <TableCell className="text-start">
-        <UserUpdateForm user={user} clients={allClients}>
+        <UserUpdateForm user={user}>
           <Button
             variant="outline"
             className="h-8 px-2 sm:h-9 sm:px-3 text-xs sm:text-sm"

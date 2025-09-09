@@ -18,7 +18,8 @@ export const useClientsSchema = () => {
         sessions: z.array(z.string()).optional(),
         priceAtPurchase: z.number().optional(),
       })
-      .optional(),
+      .optional()
+      .nullable(),
   });
 };
 

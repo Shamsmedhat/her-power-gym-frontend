@@ -1,8 +1,8 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -21,7 +21,7 @@ export function UserProfile({
   clients,
 }: {
   userData: User;
-  clients: string[];
+  clients: Client[];
 }) {
   // Translations
   const t = useTranslations();
@@ -41,7 +41,7 @@ export function UserProfile({
   const initials = name
     .split(" ")
     .map((n) => n[0])
-    .join("")
+    .join(" ")
     .toUpperCase();
 
   // Format dates
@@ -67,19 +67,25 @@ export function UserProfile({
           {/* Avatar Section */}
           <div className="flex flex-col items-center md:items-start">
             <Avatar className="w-32 h-32 mb-4">
+              <AvatarImage
+                src="https://cdn-icons-png.flaticon.com/128/2922/2922561.png"
+                alt="user"
+              />
+
               <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                 {initials}
               </AvatarFallback>
             </Avatar>
-            <div className="flex gap-2">
-              <Button
+
+            <div className="flex gap-2 justify-center items-center">
+              {/* <Button
                 size="sm"
                 variant="outline"
                 className="flex items-center gap-2 bg-transparent"
-              >
-                <User className="w-4 h-4 capitalize" />
-                {t("view-details")}
-              </Button>
+              > */}
+              <User className="w-4 h-4 capitalize" />
+              <span>{t("details")}</span>
+              {/* </Button> */}
             </div>
           </div>
 
@@ -88,7 +94,7 @@ export function UserProfile({
             <div className="text-center md:text-left">
               <h1 className="text-3xl font-bold text-balance">{name}</h1>
               <p className="text-xl text-muted-foreground mb-2">{role}</p>
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="secondary" className="mb-4 text-md">
                 {t("id")} {userId}
               </Badge>
             </div>
@@ -113,7 +119,7 @@ export function UserProfile({
               <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 text-muted-foreground" />
                 <span>
-                  {daysOff || 0} {t("daysoff-label")}
+                  {daysOff?.join(" ,") || 0} {t("daysoff-label")}
                 </span>
               </div>
             </div>
@@ -160,7 +166,9 @@ export function UserProfile({
                     <span className="text-muted-foreground">
                       {t("active-clients")}:
                     </span>
-                    <span className="font-medium">{clients?.length}</span>
+                    <span className="font-medium">
+                      {clients?.length === 0 ? t("zero") : clients?.length}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -169,23 +177,27 @@ export function UserProfile({
                 <CardHeader className="pb-3">
                   <h3 className="text-lg font-semibold flex items-center gap-2">
                     <Users className="w-5 h-5" />
-                    Contact Information
+                    {t("contact-information")}
                   </h3>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Phone:</span>
+                    <span className="text-muted-foreground">{t("phone")}:</span>
                     <span className="font-medium">{phone}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Join Date:</span>
+                    <span className="text-muted-foreground">
+                      {t("join-date")}:
+                    </span>
                     <span className="font-medium">{joinDate}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">
-                      Days Off Left:
+                      {t("days-off-0")}:
                     </span>
-                    <span className="font-medium">{daysOff || 0} days</span>
+                    <span className="font-medium">
+                      {daysOff?.join(" ,") || 0}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -195,31 +207,37 @@ export function UserProfile({
           <TabsContent value="clients" className="mt-6">
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold">Active Clients</h3>
+                <h3 className="text-lg font-semibold capitalize">
+                  {t("active-clients-0")}
+                </h3>
                 <p className="text-muted-foreground">
-                  Currently working with {clients?.length} clients
+                  {t("clients-msg", {
+                    clientsLength:
+                      clients?.length === 0 ? t("zero") : clients?.length,
+                  })}
                 </p>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {clients?.map((client, index) => (
-                    <div
-                      key={index}
-                      className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
-                          {client[0]}
-                        </div>
-                        <div>
-                          <h4 className="font-medium">{client}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Active
-                          </p>
+                  {clients &&
+                    clients?.map((client, index) => (
+                      <div
+                        key={index}
+                        className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+                            {client.name}
+                          </div>
+                          <div>
+                            <h4 className="font-medium">{client.name}</h4>
+                            <p className="text-sm text-muted-foreground capitalize">
+                              {t("active")}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
