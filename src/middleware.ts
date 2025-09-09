@@ -25,19 +25,34 @@ const authMiddleware = withAuth(
 );
 
 export default function middleware(req: NextRequest) {
-  const { locales } = routing;
+  const { locales, defaultLocale } = routing;
+  const pathname = req.nextUrl.pathname;
+
+  // Check if pathname has a locale
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
+
+  // If no locale is present, redirect to default locale (Arabic)
+  if (!pathnameHasLocale) {
+    const newUrl = new URL(`/${defaultLocale}${pathname}`, req.nextUrl.origin);
+    newUrl.search = req.nextUrl.search;
+    return Response.redirect(newUrl);
+  }
+
   const publicPathnameRegex = RegExp(
     `^(/(${locales.join("|")}))?(${publicPages
       .flatMap((p) => (p === "/" ? ["", "/"] : p))
       .join("|")})/?$`,
     "i"
   );
-  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
+  const isPublicPage = publicPathnameRegex.test(pathname);
 
   if (isPublicPage) {
     return handleI18nRouting(req);
   } else {
-    return authMiddleware(req);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (authMiddleware as any)(req);
   }
 }
 

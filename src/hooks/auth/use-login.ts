@@ -29,7 +29,8 @@ export default function useLogin() {
     },
     onSuccess: (data) => {
       // Redirect to the callback URL after a successful login
-      window.location.href = data?.url || "/";
+      const callbackUrl = data?.url || "/homepage";
+      router.push(callbackUrl);
     },
   });
 
