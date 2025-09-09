@@ -5,6 +5,7 @@ import {
   deleteUserAction,
   updateUserAction,
 } from "@/lib/actions/employees/employee.action";
+import { updatePasswordAction } from "@/lib/actions/users/user.action";
 
 // Create user
 export function useCreateUser() {
@@ -40,4 +41,19 @@ export function useDeleteUser() {
   });
 
   return { isPending, error, isSuccess, deleteUser: mutate };
+}
+
+export function useUpdatePassword() {
+  // Mutation
+  const { isPending, error, mutate } = useMutation({
+    mutationFn: async ({
+      currentPassword,
+      newPassword,
+    }: {
+      currentPassword: string;
+      newPassword: string;
+    }) => await updatePasswordAction({ currentPassword, newPassword }),
+  });
+
+  return { isPending, error, updatePassword: mutate };
 }

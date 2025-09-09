@@ -9,7 +9,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -26,14 +25,11 @@ import { LoginFields, useLoginSchema } from "@/lib/schemes/auth.schema";
 import { PasswordInput } from "@/components/common/password-input";
 import useLogin from "../../../../../hooks/auth/use-login";
 import SubmitFeedback from "@/components/common/submit-feedback";
-import { useRouter } from "@/i18n/routing";
+import { LoaderCircle } from "lucide-react";
 
 export default function LoginForm() {
   // Translation
   const t = useTranslations();
-
-  // Navigation
-  const router = useRouter();
 
   // Hooks
   const loginSchema = useLoginSchema();
@@ -127,27 +123,13 @@ export default function LoginForm() {
               }
             >
               {t("login")}
+              <span>
+                {isPending && <LoaderCircle className="animate-spin" />}
+              </span>
             </Button>
           </form>
         </Form>
       </CardContent>
-
-      {/* Footer */}
-      <CardFooter className="flex justify-center">
-        <p className="text-sm text-muted-foreground">
-          {t.rich("dont-have-account", {
-            button: (v) => (
-              <Button
-                variant="link"
-                className="p-0 h-auto"
-                onClick={() => router.push("/auth/register")}
-              >
-                {v}
-              </Button>
-            ),
-          })}
-        </p>
-      </CardFooter>
     </Card>
   );
 }

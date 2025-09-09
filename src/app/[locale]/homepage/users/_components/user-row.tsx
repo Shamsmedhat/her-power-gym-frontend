@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { useDeleteUser } from "@/hooks/employee/use-employee";
+import { useDeleteUser } from "@/hooks/user/use-user";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/tailwind-merge";
 import { LoaderCircle } from "lucide-react";
@@ -60,6 +60,7 @@ export default function UserRow({
     friday: weekdays[5],
     saturday: weekdays[6],
   };
+
   return (
     <TableRow key={user._id}>
       {/* Name */}
@@ -81,9 +82,11 @@ export default function UserRow({
       <TableCell className="text-start">
         {user.daysOff && user.daysOff.length > 0
           ? user.daysOff
-              .map((day) =>
-                format(weekdayMap[day.toLowerCase()], "EEEE", { locale: ar })
-              )
+              .map((day) => {
+                const key = day.trim().toLowerCase(); // handle case + spaces
+                const date = weekdayMap[key];
+                return date ? format(date, "EEEE", { locale: ar }) : day; // fallback if missing
+              })
               .join(", ")
           : "-"}
       </TableCell>

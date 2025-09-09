@@ -18,7 +18,9 @@ export default function useLogin() {
         phone,
         password,
         redirect: false,
-        callbackUrl: decodeURIComponent(searchParams.get("callbackUrl") || "/"),
+        callbackUrl: decodeURIComponent(
+          searchParams.get("callbackUrl") || "/homepage"
+        ),
       });
 
       if (response?.error) throw new AuthenticationError(response.error);

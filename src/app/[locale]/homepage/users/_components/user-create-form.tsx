@@ -33,7 +33,7 @@ import {
   MultiSelectGroup,
   MultiSelectItem,
 } from "@/components/ui/multi-select";
-import { useCreateUser } from "@/hooks/employee/use-employee";
+import { useCreateUser } from "@/hooks/user/use-user";
 import { useUsersSchema, UsersFields } from "@/lib/schemes/employees.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -85,13 +85,20 @@ export default function UserCreateForm({ clients }: { clients: Client[] }) {
           {t("create-user")}
         </Button>
       </DialogTrigger>
+
+      {/* Content */}
       <DialogContent className="sm:max-w-[425px]">
+        {/* Header */}
         <DialogHeader>
+          {/* Title */}
           <DialogTitle>{t("create-user")}</DialogTitle>
           <DialogDescription>{t("create-user-description")}</DialogDescription>
         </DialogHeader>
+
+        {/* Form */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Name */}
             <FormField
               control={form.control}
               name="name"
@@ -106,6 +113,7 @@ export default function UserCreateForm({ clients }: { clients: Client[] }) {
               )}
             />
 
+            {/* Phone */}
             <FormField
               control={form.control}
               name="phone"
@@ -120,6 +128,7 @@ export default function UserCreateForm({ clients }: { clients: Client[] }) {
               )}
             />
 
+            {/* Role */}
             <FormField
               control={form.control}
               name="role"
@@ -136,7 +145,7 @@ export default function UserCreateForm({ clients }: { clients: Client[] }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="super admin">Super Admin</SelectItem>
+                      <SelectItem value="super-admin">Super Admin</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
                       <SelectItem value="coach">Coach</SelectItem>
                     </SelectContent>

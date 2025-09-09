@@ -9,7 +9,8 @@ export default async function Page() {
 
   const [payload, errors] = await catchError(getClients());
 
-  if (errors) return <p>Error</p>;
+  console.log(errors);
+  if (errors) return <p>{errors.message}</p>;
 
   return (
     <section className="min-h-screen flex justify-center items-center flex-col gap-6 my-6 px-4">

@@ -3,7 +3,7 @@ import catchError from "@/lib/utils/catch-error";
 import { getUsers } from "@/lib/apis/users.api";
 import { getClients } from "@/lib/apis/clients.api";
 import UserList from "./_components/user-list";
-import UserCreateForm from "./_components/user-create-form";
+import RegisterForm from "../../(auth)/register/_components/register-form";
 
 export default async function page() {
   // Fetch
@@ -14,10 +14,12 @@ export default async function page() {
   if (errorUsers || errorClients)
     return <p>{errorUsers?.message || errorClients?.message}</p>;
 
+  console.log("payloadClients", payloadClients);
   return (
     <section>
       {/* Create new employee */}
-      <UserCreateForm clients={payloadClients?.data.clients || []} />
+      {/* <UserCreateForm clients={payloadClients?.data.clients || []} /> */}
+      <RegisterForm clients={payloadClients?.data.clients} />
 
       <Suspense fallback={<p>loading...</p>}>
         <div className="w-full overflow-x-auto">

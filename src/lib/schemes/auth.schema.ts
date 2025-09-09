@@ -8,7 +8,7 @@ export const useRegisterSchema = () => {
     name: z.string().min(1, { message: t("name-is-required") }),
     phone: z.string().min(1, { message: t("phone-required") }),
     password: z.string().min(5, { message: t("password-required") }),
-    role: z.enum(["super admin", "admin", "coach"], {
+    role: z.enum(["super-admin", "admin", "coach"], {
       errorMap: () => ({ message: t("role-invalid") }),
     }),
 

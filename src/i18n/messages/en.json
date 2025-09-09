@@ -148,5 +148,20 @@
   "create-user": "create user",
   "create-user-description": "create a new user in the gym",
   "create": "create",
-  "select-days-off": "select days off"
+  "select-days-off": "select days off",
+  "password-updated-success": "password updated success",
+  "update-password": "update password",
+  "current-password-label": "current password",
+  "current-password-placeholder": "enter your current password ",
+  "new-password-label": "new password",
+  "new-password-placeholder": "enter your new password",
+  "view-details": "view details",
+  "id": "ID:",
+  "joined": "joined",
+  "monthly": "monthly",
+  "overview": "overview",
+  "clients-private": "clients private",
+  "work-information": "work information",
+  "monthly-salary": "monthly salary",
+  "active-clients": "Active Clients"
 }

@@ -105,3 +105,35 @@ export const deleteClientAction = async (id: string) => {
 
   return payload;
 };
+
+// Update password
+export const updatePasswordAction = async ({
+  currentPassword,
+  newPassword,
+}: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  // User token
+  const token = await getTokenDecoded();
+
+  // Fetch
+  const respones = await fetch(`${process.env.API}/auth/update-password`, {
+    method: "PATCH",
+    body: JSON.stringify({ currentPassword, newPassword }),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...JSON_HEADER,
+    },
+  });
+
+  // Payload
+  const payload: APIResponse<{ user: User }> = await respones.json();
+
+  // Error
+  if ("statusCode" in payload && payload.statusCode === 401) {
+    throw new Error(payload.message || "Unknown server error");
+  }
+
+  return payload;
+};

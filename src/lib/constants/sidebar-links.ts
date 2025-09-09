@@ -4,17 +4,17 @@ export const SIDEBAR_LINKS = (t: (key: string) => string) => {
   return [
     {
       title: t("clients"),
-      url: "/clients",
+      url: "/homepage/clients",
       icon: UserRound,
     },
     {
       title: t("users"),
-      url: "/users",
+      url: "/homepage/users",
       icon: IdCardLanyard,
     },
     {
       title: t("subscription"),
-      url: "/subscriptions",
+      url: "/homepage/subscriptions",
       icon: Wallet,
     },
   ];

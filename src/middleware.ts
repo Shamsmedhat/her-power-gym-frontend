@@ -1,67 +1,96 @@
-import { withAuth } from "next-auth/middleware";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
 import { getToken } from "next-auth/jwt";
 
-const authPages = ["/auth/login"];
-const publicPages = ["/", ...authPages];
+// Pages that don't require authentication
+const publicPages = ["/", "/login", "/register"];
+
+// Pages that require authentication
+const protectedPages = [
+  "/homepage",
+  "/homepage/clients",
+  "/homepage/subscriptions",
+  "/homepage/users",
+];
 
 const handleI18nRouting = createMiddleware(routing);
 
-const authMiddleware = withAuth(
-  // Note that this callback is only invoked if
-  // the `authorized` callback has returned `true`
-  // and not for pages listed in `pages`.
-  function onSuccess(req) {
-    return handleI18nRouting(req);
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => token != null,
-    },
-    pages: {
-      signIn: "/auth/login",
-    },
-  }
-);
+// We'll handle auth manually for better control over routing
 
 export default async function middleware(req: NextRequest) {
   // Variables
   const token = await getToken({ req });
-  const publicPathnameRegex = RegExp(
-    `^(/(${routing.locales.join("|")}))?(${publicPages
-      .flatMap((p) => (p === "/" ? ["", "/"] : p))
-      .join("|")})/?$`,
-    "i"
-  );
-  const authPathnameRegex = RegExp(
-    `^(/(${routing.locales.join("|")}))?(${authPages
-      .flatMap((p) => (p === "/" ? ["", "/"] : p))
-      .join("|")})/?$`,
-    "i"
-  );
-  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname);
-  const isAuthPage = authPathnameRegex.test(req.nextUrl.pathname);
+  const pathname = req.nextUrl.pathname;
 
+  // Check if the pathname has a locale
+  const pathnameHasLocale = routing.locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
+
+  // If no locale is present, redirect to Arabic (default) with the same path
+  if (!pathnameHasLocale) {
+    const newUrl = new URL(`/ar${pathname}`, req.nextUrl.origin);
+    newUrl.search = req.nextUrl.search;
+    return NextResponse.redirect(newUrl);
+  }
+
+  // Extract locale and path without locale
+  const locale = pathnameHasLocale ? pathname.split("/")[1] : "ar";
+  const pathWithoutLocale = pathnameHasLocale
+    ? pathname.substring(3)
+    : pathname;
+
+  // Check if it's a public page
+  const isPublicPage = publicPages.some(
+    (page) =>
+      pathWithoutLocale === page || pathWithoutLocale.startsWith(page + "/")
+  );
+
+  // Check if it's a protected page
+  const isProtectedPage = protectedPages.some(
+    (page) =>
+      pathWithoutLocale === page || pathWithoutLocale.startsWith(page + "/")
+  );
+
+  // If it's a public page (login, register, root)
   if (isPublicPage) {
-    // Redirect to homepage if user is authenticated and attempting to access an auth page
-    if (token && isAuthPage) {
-      const redirectUrl = new URL("/", req.nextUrl.origin);
+    // If user is authenticated and trying to access login/register, redirect to homepage
+    if (
+      token &&
+      (pathWithoutLocale === "/login" || pathWithoutLocale === "/register")
+    ) {
+      const redirectUrl = new URL(`/${locale}/homepage`, req.nextUrl.origin);
+      return NextResponse.redirect(redirectUrl);
+    }
 
-      // Include current search params
-      Object.entries(req.nextUrl.searchParams).map(([key, value]) =>
-        redirectUrl.searchParams.set(key, value)
-      );
-
+    // If user is authenticated and trying to access root, redirect to homepage
+    if (token && pathWithoutLocale === "/") {
+      const redirectUrl = new URL(`/${locale}/homepage`, req.nextUrl.origin);
       return NextResponse.redirect(redirectUrl);
     }
 
     return handleI18nRouting(req);
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (authMiddleware as any)(req);
   }
+
+  // If it's a protected page, check authentication
+  if (isProtectedPage) {
+    if (!token) {
+      // Redirect to login page with the same locale
+      const redirectUrl = new URL(`/${locale}/login`, req.nextUrl.origin);
+      return NextResponse.redirect(redirectUrl);
+    }
+
+    return handleI18nRouting(req);
+  }
+
+  // For any other pages, check authentication and handle routing
+  if (!token) {
+    const redirectUrl = new URL(`/${locale}/login`, req.nextUrl.origin);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  return handleI18nRouting(req);
 }
 
 export const config = {

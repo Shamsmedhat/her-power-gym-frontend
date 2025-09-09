@@ -148,5 +148,20 @@
   "create-user": "تسجيل مستخدم جديد",
   "create-user-description": "تسجيل مستخدم جديد في الجيم",
   "create": "تسجيل",
-  "select-days-off": "حدد ايام الاجازة"
+  "select-days-off": "حدد ايام الاجازة",
+  "password-updated-success": "تم تحديث كلمه المرور بنجاح",
+  "update-password": "تعديل كلمة المرور",
+  "current-password-label": "كلمة المرور الحالية",
+  "current-password-placeholder": "أدخل كلمة المرور الحالية الخاصة بك",
+  "new-password-label": "كلمة المرور الجديدة",
+  "new-password-placeholder": "ادخل كلمة المرور الجديدة",
+  "view-details": "عرض التفاصيل",
+  "id": "اي دي",
+  "joined": "تاريخ الانضمام",
+  "monthly": "شهريا",
+  "overview": "ملخص",
+  "clients-private": "عملاء البرايفت",
+  "work-information": "معلوماتي",
+  "monthly-salary": "راتب شهري",
+  "active-clients": "عدد العملاء البرايفت"
 }

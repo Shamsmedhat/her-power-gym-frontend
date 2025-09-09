@@ -25,6 +25,7 @@ export default async function UserWithClients({
 
   const createdDate = format(user.createdAt, "MMM / dd / yyyy");
 
+  console.log("createdDate1", createdDate);
   return (
     <UserRow
       key={user._id}

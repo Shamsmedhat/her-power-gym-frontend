@@ -2,7 +2,7 @@ declare type Employee = {
   _id: string;
   name: string;
   phone: string;
-  role: "super admin" | "admin" | "coach";
+  role: "super-admin" | "admin" | "coach";
   userId: string;
 
   // Optional fields

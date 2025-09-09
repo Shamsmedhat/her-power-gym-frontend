@@ -33,7 +33,7 @@ import {
   MultiSelectGroup,
   MultiSelectItem,
 } from "@/components/ui/multi-select";
-import { useUpdateUser } from "@/hooks/employee/use-employee";
+import { useUpdateUser } from "@/hooks/user/use-user";
 import { useUsersSchema, UsersFields } from "@/lib/schemes/employees.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -183,7 +183,7 @@ export default function UserUpdateForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="super admin">Super Admin</SelectItem>
+                      <SelectItem value="super-admin">Super Admin</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
                       <SelectItem value="coach">Coach</SelectItem>
                     </SelectContent>

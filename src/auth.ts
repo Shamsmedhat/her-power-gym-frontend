@@ -6,7 +6,7 @@ import { AuthenticationError } from "./lib/utils/app-errors";
 
 export const authOptions: NextAuthOptions = {
   pages: {
-    signIn: "/auth/login",
+    signIn: "/",
   },
   providers: [
     Credentials({
@@ -34,6 +34,7 @@ export const authOptions: NextAuthOptions = {
           throw new AuthenticationError(payload.message);
         }
 
+        console.log("payload", payload);
         // Return the user to be encoded using JWT callback
         return {
           id: payload.user._id,
