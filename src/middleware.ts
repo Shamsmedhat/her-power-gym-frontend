@@ -16,7 +16,13 @@ const authMiddleware = withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => token != null,
+      authorized: ({ token, req }) => {
+        // Allow access to homepage if user is authenticated
+        if (token && req.nextUrl.pathname.includes("/homepage")) {
+          return true;
+        }
+        return token != null;
+      },
     },
     pages: {
       signIn: "/",

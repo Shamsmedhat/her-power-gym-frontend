@@ -30,6 +30,8 @@ export default function useLogin() {
     onSuccess: (data) => {
       // Redirect to the callback URL after a successful login
       const callbackUrl = data?.url || "/homepage";
+      console.log("Login successful, redirecting to:", callbackUrl);
+      console.log("Response data:", data);
       router.push(callbackUrl);
     },
   });

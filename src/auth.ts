@@ -8,6 +8,20 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/",
   },
+  cookies: {
+    sessionToken: {
+      name:
+        process.env.NODE_ENV === "production"
+          ? "__Secure-next-auth.session-token"
+          : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
   providers: [
     Credentials({
       name: "Credentials",
@@ -62,10 +76,18 @@ export const authOptions: NextAuthOptions = {
     },
     redirect: ({ url, baseUrl }) => {
       // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (url.startsWith("/")) {
+        // Check if URL already has a locale prefix
+        const hasLocale = url.startsWith("/ar/") || url.startsWith("/en/");
+        if (hasLocale) {
+          return `${baseUrl}${url}`;
+        }
+        // Add default locale (Arabic) if no locale is present
+        return `${baseUrl}/ar${url}`;
+      }
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
-      return `${baseUrl}/homepage`;
+      return `${baseUrl}/ar/homepage`;
     },
   },
 };
