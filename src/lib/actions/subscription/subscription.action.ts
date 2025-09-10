@@ -25,7 +25,6 @@ export const createSubscriptionAction = async (
   // Payload
   const payload: APIResponse<{ data: { subscriptionPlans: Subscription } }> =
     await respones.json();
-  console.log("payload", payload);
 
   // Error
   if ("statusCode" in payload && payload.statusCode === 401) {

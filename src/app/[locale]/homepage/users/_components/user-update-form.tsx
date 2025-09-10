@@ -82,8 +82,6 @@ export default function UserUpdateForm({
       ? [user.daysOff]
       : [];
 
-    console.log("Resetting form with daysOff:", normalizedDaysOff);
-
     form.reset({
       name: user.name,
       phone: user.phone,

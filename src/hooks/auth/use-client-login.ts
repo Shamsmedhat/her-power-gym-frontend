@@ -1,22 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRouter } from "@/i18n/routing";
-import { LoginFields } from "@/lib/schemes/auth.schema";
+import { ClientLoginFields } from "@/lib/schemes/auth.schema";
 import { AuthenticationError } from "@/lib/utils/app-errors";
 import { useMutation } from "@tanstack/react-query";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
-export default function useLogin() {
+export default function useClientLogin() {
   // Navigation
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // Mutation
   const { isPending, error, mutate } = useMutation({
-    mutationFn: async ({ phone, password }: LoginFields) => {
-      const response = await signIn("credentials", {
+    mutationFn: async ({ phone, clientId }: ClientLoginFields) => {
+      const response = await signIn("client-credentials", {
         phone,
-        password,
+        clientId,
         redirect: false,
         callbackUrl: decodeURIComponent(
           searchParams.get("callbackUrl") || "/homepage"
@@ -28,11 +27,11 @@ export default function useLogin() {
       return response;
     },
     onSuccess: (data) => {
-      // Redirect to the callback URL after a successful login
+      // Redirect to the client dashboard after successful login
       const callbackUrl = data?.url || "/homepage";
       router.push(callbackUrl);
     },
   });
 
-  return { isPending, error, login: mutate };
+  return { isPending, error, clientLogin: mutate };
 }

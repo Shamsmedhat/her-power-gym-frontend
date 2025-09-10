@@ -22,7 +22,6 @@ export const registerAction = async (
 
   const payload: APIResponse<RegisterResponse> = await respones.json();
 
-  console.log("payload", payload);
   revalidateTag("users");
 
   if ("statusCode" in payload && payload.statusCode === 401) {

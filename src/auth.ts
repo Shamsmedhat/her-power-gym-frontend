@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { JSON_HEADER } from "./lib/constants/api.constant";
-import { LoginResponse } from "./lib/types/auth";
+import { LoginResponse, ClientLoginResponse } from "./lib/types/auth";
 import { AuthenticationError } from "./lib/utils/app-errors";
 
 export const authOptions: NextAuthOptions = {
@@ -48,11 +48,46 @@ export const authOptions: NextAuthOptions = {
           throw new AuthenticationError(payload.message);
         }
 
-        console.log("payload", payload);
         // Return the user to be encoded using JWT callback
         return {
           id: payload.user._id,
           user: payload.user,
+          token: payload.token,
+        };
+      },
+    }),
+    Credentials({
+      id: "client-credentials",
+      name: "Client Credentials",
+      credentials: {
+        phone: {},
+        clientId: {},
+      },
+      authorize: async (credentials) => {
+        const response = await fetch(`${process.env.API}/auth/login-client`, {
+          method: "POST",
+          body: JSON.stringify({
+            phone: credentials?.phone,
+            clientId: credentials?.clientId,
+          }),
+          headers: {
+            ...JSON_HEADER,
+          },
+        });
+
+        const payload: APIResponse<ClientLoginResponse> = await response.json();
+
+        // Throw an auth error if the login has failed
+        if ("statusCode" in payload) {
+          throw new AuthenticationError(payload.message);
+        }
+
+        // Return the client to be encoded using JWT callback
+        return {
+          id: payload.data.user._id,
+          user: payload.data.user,
+          client: payload.data.client,
+          userType: "client",
           token: payload.token,
         };
       },
@@ -63,6 +98,8 @@ export const authOptions: NextAuthOptions = {
       // If the user exists it was a successful login attempt, so save the new user data in the cookies
       if (user) {
         token.user = user.user;
+        token.client = user.client;
+        token.userType = (user.user.role as string) || "user";
         token.token = user.token;
       }
 
@@ -71,6 +108,8 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, token }) => {
       // Decode the user data from the token cookie and store it in the session object
       session.user = token.user;
+      session.client = token.client;
+      session.userType = token.userType as string;
 
       return session;
     },

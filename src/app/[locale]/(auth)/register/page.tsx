@@ -9,7 +9,6 @@ export default async function Page() {
 
   const [payload, errors] = await catchError(getClients());
 
-  console.log(errors);
   if (errors) return <p>{errors.message}</p>;
 
   return (

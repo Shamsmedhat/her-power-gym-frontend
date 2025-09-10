@@ -3,6 +3,8 @@ declare type Client = {
   name: string;
   phone: string;
   clientId: string;
+  createdAt: string;
+  updatedAt?: string;
 
   subscription: {
     plan: {
@@ -33,6 +35,7 @@ declare type Client = {
       _id: Types.ObjectId;
       name: string;
       phone: string;
+      daysOff: string[];
     };
     totalSessions?: number;
     sessions?: Types.ObjectId[];

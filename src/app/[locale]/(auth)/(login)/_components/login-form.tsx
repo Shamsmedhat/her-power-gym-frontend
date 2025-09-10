@@ -21,22 +21,38 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginFields, useLoginSchema } from "@/lib/schemes/auth.schema";
+import {
+  LoginFields,
+  useLoginSchema,
+  ClientLoginFields,
+  useClientLoginSchema,
+} from "@/lib/schemes/auth.schema";
 import { PasswordInput } from "@/components/common/password-input";
 import useLogin from "../../../../../hooks/auth/use-login";
+import useClientLogin from "../../../../../hooks/auth/use-client-login";
 import SubmitFeedback from "@/components/common/submit-feedback";
 import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
 export default function LoginForm() {
   // Translation
   const t = useTranslations();
 
+  // State
+  const [loginType, setLoginType] = useState<"user" | "client">("user");
+
   // Hooks
   const loginSchema = useLoginSchema();
+  const clientLoginSchema = useClientLoginSchema();
   const { isPending, error, login } = useLogin();
+  const {
+    isPending: isClientPending,
+    error: clientError,
+    clientLogin,
+  } = useClientLogin();
 
-  // Form
-  const form = useForm<LoginFields>({
+  // Forms
+  const userForm = useForm<LoginFields>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       phone: "",
@@ -44,9 +60,21 @@ export default function LoginForm() {
     },
   });
 
+  const clientForm = useForm<ClientLoginFields>({
+    resolver: zodResolver(clientLoginSchema),
+    defaultValues: {
+      phone: "",
+      clientId: "",
+    },
+  });
+
   // Functions
-  const onSubmit: SubmitHandler<LoginFields> = (values) => {
+  const onSubmitUser: SubmitHandler<LoginFields> = (values) => {
     login(values);
+  };
+
+  const onSubmitClient: SubmitHandler<ClientLoginFields> = (values) => {
+    clientLogin(values);
   };
 
   return (
@@ -62,79 +90,195 @@ export default function LoginForm() {
 
       {/* Content */}
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email */}
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  {/* Label */}
-                  <FormLabel>{t("phone-label")}</FormLabel>
-
-                  {/* Field */}
-                  <FormControl>
-                    <Input
-                      type="phone"
-                      placeholder={t("phone-placeholder")}
-                      autoComplete="phone"
-                      {...field}
-                    />
-                  </FormControl>
-
-                  {/* Feedback */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Password */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  {/* Label */}
-                  <FormLabel>{t("password-label")}</FormLabel>
-
-                  {/* Field */}
-                  <FormControl className="relative">
-                    <PasswordInput {...field} autoComplete="current-password" />
-                  </FormControl>
-
-                  {/* Feedback */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Feedback */}
-            {
-              <SubmitFeedback>
-                {error?.message.includes("Incorrect")
-                  ? t("incorrect-phone-or-password")
-                  : error?.message}
-              </SubmitFeedback>
-            }
-
-            {/* Submit */}
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={
-                isPending ||
-                // (form.formState.isSubmitted && !form.formState.isValid)
-                form.formState.isSubmitting
-              }
+        {loginType === "user" ? (
+          <Form {...userForm} key="user-form">
+            <form
+              onSubmit={userForm.handleSubmit(onSubmitUser)}
+              className="space-y-6"
             >
-              {t("login")}
-              <span>
-                {isPending && <LoaderCircle className="animate-spin" />}
-              </span>
-            </Button>
-          </form>
-        </Form>
+              {/* Login Type Toggle */}
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant="default"
+                  onClick={() => {
+                    setLoginType("user");
+                    userForm.reset({ phone: "", password: "" });
+                  }}
+                  className="flex-1"
+                >
+                  {t("staff-login")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setLoginType("client");
+                    clientForm.reset({ phone: "", clientId: "" });
+                    clientForm.clearErrors();
+                  }}
+                  className="flex-1"
+                >
+                  {t("client-login")}
+                </Button>
+              </div>
+
+              {/* Phone */}
+              <FormField
+                control={userForm.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("phone-label")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="phone"
+                        placeholder={t("phone-placeholder")}
+                        autoComplete="phone"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Password */}
+              <FormField
+                control={userForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("password-label")}</FormLabel>
+                    <FormControl className="relative">
+                      <PasswordInput
+                        {...field}
+                        autoComplete="current-password"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Feedback */}
+              {error && (
+                <SubmitFeedback>
+                  {error?.message.includes("Incorrect")
+                    ? t("incorrect-phone-or-password")
+                    : error?.message}
+                </SubmitFeedback>
+              )}
+
+              {/* Submit */}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isPending || userForm.formState.isSubmitting}
+              >
+                {t("login")}
+                <span>
+                  {isPending && <LoaderCircle className="animate-spin" />}
+                </span>
+              </Button>
+            </form>
+          </Form>
+        ) : (
+          <Form {...clientForm} key="client-form">
+            <form
+              onSubmit={clientForm.handleSubmit(onSubmitClient)}
+              className="space-y-6"
+            >
+              {/* Login Type Toggle */}
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setLoginType("user");
+                    userForm.reset({ phone: "", password: "" });
+                  }}
+                  className="flex-1"
+                >
+                  {t("staff-login")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="default"
+                  onClick={() => {
+                    setLoginType("client");
+                    clientForm.reset({ phone: "", clientId: "" });
+                    clientForm.clearErrors();
+                  }}
+                  className="flex-1"
+                >
+                  {t("client-login")}
+                </Button>
+              </div>
+
+              {/* Phone */}
+              <FormField
+                control={clientForm.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("phone-label")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="phone"
+                        placeholder={t("phone-placeholder")}
+                        autoComplete="phone"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Client ID */}
+              <FormField
+                control={clientForm.control}
+                name="clientId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("client-id-label")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder={t("client-id-placeholder")}
+                        {...field}
+                        disabled={isClientPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Feedback */}
+              {clientError && (
+                <SubmitFeedback>
+                  {clientError?.message.includes("Incorrect")
+                    ? t("incorrect-phone-or-password")
+                    : clientError?.message}
+                </SubmitFeedback>
+              )}
+
+              {/* Submit */}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isClientPending || clientForm.formState.isSubmitting}
+              >
+                {t("client-login")}
+                <span>
+                  {isClientPending && <LoaderCircle className="animate-spin" />}
+                </span>
+              </Button>
+            </form>
+          </Form>
+        )}
       </CardContent>
     </Card>
   );

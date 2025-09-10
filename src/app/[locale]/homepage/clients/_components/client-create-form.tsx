@@ -87,7 +87,6 @@ export default function ClientCreateForm({
 
   // Functions
   function onSubmit(values: ClientsFields) {
-    console.log("values", values);
     createNewClient(values, {
       onSuccess: () => {
         toast.success(t("client-created-successfully"));

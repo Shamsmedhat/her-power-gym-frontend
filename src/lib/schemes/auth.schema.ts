@@ -39,3 +39,21 @@ export const useLoginSchema = () => {
 };
 
 export type LoginFields = z.infer<ReturnType<typeof useLoginSchema>>;
+
+export const useClientLoginSchema = () => {
+  // Translation
+  const t = useTranslations();
+
+  return z.object({
+    phone: z.string({ required_error: t("phone-required") }).min(9, {
+      message: t("phone-invalid"),
+    }),
+    clientId: z
+      .string({ required_error: t("client-id-required") })
+      .min(1, { message: t("client-id-required") }),
+  });
+};
+
+export type ClientLoginFields = z.infer<
+  ReturnType<typeof useClientLoginSchema>
+>;

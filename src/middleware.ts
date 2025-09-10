@@ -1,7 +1,8 @@
 import { withAuth } from "next-auth/middleware";
 import createMiddleware from "next-intl/middleware";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
+import { getToken } from "next-auth/jwt";
 
 const publicPages = ["/", "/register"];
 
@@ -30,7 +31,7 @@ const authMiddleware = withAuth(
   }
 );
 
-export default function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   const { locales, defaultLocale } = routing;
   const pathname = req.nextUrl.pathname;
 
@@ -44,6 +45,34 @@ export default function middleware(req: NextRequest) {
     const newUrl = new URL(`/${defaultLocale}${pathname}`, req.nextUrl.origin);
     newUrl.search = req.nextUrl.search;
     return Response.redirect(newUrl);
+  }
+
+  // Check if user has a token
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  // Check if user is on login page (root) with any locale
+  const isLoginPage =
+    locales.some(
+      (locale) => pathname === `/${locale}` || pathname === `/${locale}/`
+    ) || pathname === "/";
+
+  // If user is authenticated and trying to access login page, redirect to homepage
+  if (token && isLoginPage) {
+    // Extract current locale from pathname
+    let currentLocale = defaultLocale;
+    for (const locale of locales) {
+      if (pathname.startsWith(`/${locale}`)) {
+        currentLocale = locale;
+        break;
+      }
+    }
+
+    const homepageUrl = new URL(
+      `/${currentLocale}/homepage`,
+      req.nextUrl.origin
+    );
+    homepageUrl.search = req.nextUrl.search;
+    return NextResponse.redirect(homepageUrl);
   }
 
   const publicPathnameRegex = RegExp(

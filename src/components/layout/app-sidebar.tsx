@@ -16,7 +16,6 @@ import { useTranslations } from "next-intl";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils/tailwind-merge";
 import { useUserRole } from "@/lib/utils/user-role";
-import { useSession } from "next-auth/react";
 
 type AppSidebarProps = {
   side?: "left" | "right";
@@ -32,8 +31,6 @@ export function AppSidebar({ side = "left" }: AppSidebarProps) {
   // Variable
   const links = SIDEBAR_LINKS(t);
 
-  const session = useSession();
-  console.log("use session", session);
   // Hooks
   const canSee = useUserRole(["admin", "super-admin"]);
 

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 // import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { format } from "date-fns";
 import {
   CalendarDays,
   DollarSign,
@@ -13,6 +14,8 @@ import {
   Clock,
   User,
   Briefcase,
+  Calendar,
+  CreditCard,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -26,16 +29,7 @@ export function UserProfile({
   // Translations
   const t = useTranslations();
 
-  const {
-    createdAt,
-    daysOffHistory,
-    name,
-    phone,
-    role,
-    userId,
-    daysOff,
-    salary,
-  } = userData;
+  const { createdAt, name, phone, role, userId, daysOff, salary } = userData;
 
   // Generate initials for avatar
   const initials = name
@@ -218,22 +212,132 @@ export function UserProfile({
                 </p>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
                   {clients &&
                     clients?.map((client, index) => (
                       <div
                         key={index}
                         className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
-                            {client.name}
+                        <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 max-w-md mx-auto">
+                          {/* Header Section */}
+                          <div className="flex items-center justify-between mb-6 ">
+                            <div className="flex items-center space-x-3 gap-3 rtl:space-x-reverse">
+                              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                <User className="w-6 h-6 text-white" />
+                              </div>
+                              <div>
+                                <h4 className="text-lg font-semibold text-gray-900">
+                                  {client.name}
+                                </h4>
+                                <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                  <p className="text-sm text-green-600 font-medium">
+                                    {t("active")}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="font-medium">{client.name}</h4>
-                            <p className="text-sm text-muted-foreground capitalize">
-                              {t("active")}
-                            </p>
+
+                          {/* Client Details */}
+                          <div className="space-y-4">
+                            {/* Client ID */}
+                            <div className="flex items-center justify-between py-2 border-b border-gray-100 ">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <CreditCard className="w-4 h-4 text-gray-500" />
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("id")}
+                                </span>
+                              </div>
+                              <span className="text-sm font-mono text-gray-900 bg-gray-50 px-2 py-1 rounded">
+                                {client.clientId}
+                              </span>
+                            </div>
+
+                            {/* Phone */}
+                            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <Phone className="w-4 h-4 text-gray-500" />
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("phone")}
+                                </span>
+                              </div>
+                              <span className="text-sm text-gray-900 font-medium direction-ltr">
+                                {client.phone}
+                              </span>
+                            </div>
+
+                            {/* Subscription Plan */}
+                            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-sm"></div>
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("plan")}
+                                </span>
+                              </div>
+                              <span className="text-sm font-medium px-2 py-1 bg-purple-50 text-purple-700 rounded-full">
+                                {client.subscription.plan.name}
+                              </span>
+                            </div>
+
+                            {/* Start Date */}
+                            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <Calendar className="w-4 h-4 text-gray-500" />
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("startDate")}
+                                </span>
+                              </div>
+                              <span className="text-sm text-gray-900 font-medium">
+                                {format(
+                                  client.subscription.startDate,
+                                  "MMM / dd / yyyy"
+                                )}
+                              </span>
+                            </div>
+
+                            {/* End Date */}
+                            <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <Clock className="w-4 h-4 text-gray-500" />
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("endDate")}
+                                </span>
+                              </div>
+                              <span className="text-sm text-gray-900 font-medium">
+                                {format(
+                                  client.subscription.endDate,
+                                  "MMM / dd / yyyy"
+                                )}
+                              </span>
+                            </div>
+
+                            {/* Total sessions label */}
+                            <div className="flex items-center justify-between py-2">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <div className="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("price-label")}
+                                </span>
+                              </div>
+                              <span className="text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                                {client.subscription.priceAtPurchase}
+                              </span>
+                            </div>
+
+                            {/* Price */}
+                            <div className="flex items-center justify-between py-2">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <div className="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("total-sessions-label")}
+                                </span>
+                              </div>
+                              <span className="text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                                {client.privatePlan?.totalSessions}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -241,66 +345,6 @@ export function UserProfile({
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="time-off" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <h3 className="text-lg font-semibold">Time Off Summary</h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">
-                        Days Remaining:
-                      </span>
-                      <Badge variant="outline" className="text-lg px-3 py-1">
-                        {daysOff || 0} days
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Days Used:</span>
-                      <span className="font-medium">
-                        {daysOffHistory.length} days
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <h3 className="text-lg font-semibold">Recent Time Off</h3>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {daysOffHistory.slice(-3).map((timeOff, index) => (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center"
-                      >
-                        <div>
-                          <p className="font-medium">
-                            {timeOff.changedAt
-                              ? new Date(timeOff.changedAt).toLocaleDateString()
-                              : "Date not specified"}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Changed by: {timeOff.changedBy}
-                          </p>
-                        </div>
-                        <Badge variant="secondary">
-                          {timeOff.daysOff.length > 0
-                            ? `${timeOff.daysOff.length} days`
-                            : "No days"}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
         </Tabs>
       </CardContent>
