@@ -12,17 +12,9 @@ export default async function Page() {
 
   const clientId = session?.client?._id || session?.user?.userId;
 
-  const [clientData, errors] = await catchError(getMyClientData(clientId));
+  const [clientData] = await catchError(getMyClientData(clientId));
 
-  if (errors) return <h1>Some thing went wrong please back to your coach.</h1>;
-
-  if (session?.userType === "client") {
-    return (
-      <div>
-        <ClientDashboard client={clientData?.data?.client} />
-      </div>
-    );
-  } else {
+  if (session?.userType === "coach" || clientData === null) {
     return (
       <div>
         <div>
@@ -31,6 +23,12 @@ export default async function Page() {
         <div>
           <Profile />
         </div>
+      </div>
+    );
+  } else if (session?.userType === "client") {
+    return (
+      <div>
+        <ClientDashboard client={clientData?.data?.client} />
       </div>
     );
   }

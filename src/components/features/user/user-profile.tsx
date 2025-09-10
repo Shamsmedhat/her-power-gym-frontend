@@ -313,7 +313,7 @@ export function UserProfile({
                               </span>
                             </div>
 
-                            {/* Total sessions label */}
+                            {/* Price */}
                             <div className="flex items-center justify-between py-2">
                               <div className="flex items-center gap-2 rtl:space-x-reverse">
                                 <div className="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
@@ -321,20 +321,37 @@ export function UserProfile({
                                   {t("price-label")}
                                 </span>
                               </div>
-                              <span className="text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                                {client.subscription.priceAtPurchase}
+                              {/* //TODO intl format */}
+                              <span className="text-sm font-bold gap-1 flex flex-row-reverse text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                                <span>
+                                  {client.subscription.priceAtPurchase}
+                                </span>
+                                <span>{t("currency")}</span>
                               </span>
                             </div>
 
-                            {/* Price */}
+                            {/* Total sessions label*/}
                             <div className="flex items-center justify-between py-2">
                               <div className="flex items-center gap-2 rtl:space-x-reverse">
-                                <div className="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                                <div className="w-4 h-4 bg-gradient-to-r from-yellow-500 to-green-50 rounded-full"></div>
                                 <span className="text-sm font-medium text-gray-600">
                                   {t("total-sessions-label")}
                                 </span>
                               </div>
-                              <span className="text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                              <span className="text-sm font-bold text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full">
+                                {client.privatePlan?.plan?.totalSessions}
+                              </span>
+                            </div>
+
+                            {/* Total remaining sessions label*/}
+                            <div className="flex items-center justify-between py-2">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <div className="w-4 h-4 bg-gradient-to-r from-red-500 to-emerald-50 rounded-full"></div>
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("remaining-sessions")}
+                                </span>
+                              </div>
+                              <span className="text-sm font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full">
                                 {client.privatePlan?.totalSessions}
                               </span>
                             </div>

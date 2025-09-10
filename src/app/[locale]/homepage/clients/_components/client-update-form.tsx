@@ -113,7 +113,6 @@ export default function ClientUpdateForm({
 
   // Functions
   function onSubmit(values: ClientsFields) {
-    console.log("values", values);
     updateClient(
       { clientUpdatedFields: values, id: client._id },
       {
