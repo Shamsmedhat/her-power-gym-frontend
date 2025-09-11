@@ -1,6 +1,7 @@
 import { authOptions } from "@/auth";
 import ClientDashboard from "@/components/features/client/client-dashboard";
 import Profile from "@/components/features/user/profile";
+import { Statistics } from "@/components/features/user/statistics";
 import UpdateMyPasswordForm from "@/components/features/user/update-my-password-form";
 import { getMyClientData } from "@/lib/apis/client.api";
 import catchError from "@/lib/utils/catch-error";
@@ -14,7 +15,7 @@ export default async function Page() {
 
   const [clientData] = await catchError(getMyClientData(clientId));
 
-  if (session?.userType === "coach" || clientData === null) {
+  if (session?.userType === "coach" && clientData === null) {
     return (
       <div>
         <div>
@@ -25,11 +26,16 @@ export default async function Page() {
         </div>
       </div>
     );
-  } else if (session?.userType === "client") {
+  } else if (session?.userType === "client" && clientData !== null) {
     return (
       <div>
         <ClientDashboard client={clientData?.data?.client} />
       </div>
     );
+  } else if (
+    session?.userType === "admin" ||
+    session?.userType === "super-admin"
+  ) {
+    return <Statistics />;
   }
 }

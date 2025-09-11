@@ -330,6 +330,19 @@ export function UserProfile({
                               </span>
                             </div>
 
+                            {/* Private plan label*/}
+                            <div className="flex items-center justify-between py-2">
+                              <div className="flex items-center gap-2 rtl:space-x-reverse">
+                                <div className="w-4 h-4 bg-gradient-to-r from-emerald-800 to-sky-500 rounded-sm"></div>
+                                <span className="text-sm font-medium text-gray-600">
+                                  {t("private-plan-label")}
+                                </span>
+                              </div>
+                              <span className="text-xs font-bold text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full">
+                                {client.privatePlan?.plan?.name}
+                              </span>
+                            </div>
+
                             {/* Total sessions label*/}
                             <div className="flex items-center justify-between py-2">
                               <div className="flex items-center gap-2 rtl:space-x-reverse">

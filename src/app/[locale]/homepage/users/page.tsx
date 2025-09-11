@@ -3,7 +3,7 @@ import catchError from "@/lib/utils/catch-error";
 import { getUsers } from "@/lib/apis/users.api";
 import { getClients } from "@/lib/apis/clients.api";
 import UserList from "./_components/user-list";
-import RegisterForm from "../../(auth)/register/_components/register-form";
+import UserCreateForm from "./_components/user-create-form";
 
 export default async function page() {
   // Fetch
@@ -17,8 +17,8 @@ export default async function page() {
   return (
     <section>
       {/* Create new employee */}
-      {/* <UserCreateForm clients={payloadClients?.data.clients || []} /> */}
-      <RegisterForm clients={payloadClients?.data.clients} />
+      <UserCreateForm clients={payloadClients?.data.clients || []} />
+      {/* <RegisterForm clients={payloadClients?.data.clients} /> */}
 
       <Suspense fallback={<p>loading...</p>}>
         <div className="w-full overflow-x-auto">

@@ -1,4 +1,4 @@
-import { Wallet, UserRound, IdCardLanyard } from "lucide-react";
+import { Wallet, UserRound, IdCardLanyard, BarChart3 } from "lucide-react";
 
 export const SIDEBAR_LINKS = (t: (key: string) => string) => {
   return [
@@ -16,6 +16,11 @@ export const SIDEBAR_LINKS = (t: (key: string) => string) => {
       title: t("subscription"),
       url: "/homepage/subscriptions",
       icon: Wallet,
+    },
+    {
+      title: t("statistics"),
+      url: "/homepage",
+      icon: BarChart3,
     },
   ];
 };

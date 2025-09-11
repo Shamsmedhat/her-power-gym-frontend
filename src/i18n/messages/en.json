@@ -211,5 +211,6 @@
   "no-coach-assigned": "No coach assigned",
   "recent-sessions": "Recent Sessions",
   "no-sessions-found": "No sessions found",
-  "no-client-data": "No client data available"
+  "no-client-data": "No client data available",
+  "statistics": "Statistics"
 }
