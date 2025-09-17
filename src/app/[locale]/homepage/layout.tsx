@@ -1,16 +1,22 @@
 import { Header } from "@/components/layout/header";
 import Providers from "@/components/providers";
 import { routing } from "@/i18n/routing";
-import { hasLocale } from "next-intl";
+import { getMessages, getTimeZone, getNow } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Readex_Pro } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { hasLocale } from "next-intl";
 
 const readexPro = Readex_Pro({
   subsets: ["arabic"],
 });
+
+type LayoutProps = {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+};
 
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
@@ -20,6 +26,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
     notFound();
   }
 
+  // Get messages and other i18n data
+  const messages = await getMessages();
+  const timeZone = await getTimeZone();
+  const now = await getNow();
+
   return (
     <html
       lang={locale}
@@ -27,7 +38,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
       suppressHydrationWarning
     >
       <body className={readexPro.className} suppressHydrationWarning>
-        <Providers>
+        <Providers
+          messages={messages}
+          locale={locale}
+          timeZone={timeZone}
+          now={now}
+        >
           <SidebarProvider>
             <AppSidebar side={locale === "ar" ? "right" : "left"} />
             <SidebarInset>

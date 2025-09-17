@@ -2,11 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useDeleteClient } from "@/hooks/client/use-client";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/tailwind-merge";
 import { LoaderCircle } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 import ClientUpdateForm from "./client-update-form";
 
@@ -28,6 +37,9 @@ export default function ClientRow({
   // Translation
   const t = useTranslations();
 
+  // State
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   // Hooks
   const { isPending, deleteClient, isSuccess } = useDeleteClient();
 
@@ -36,6 +48,7 @@ export default function ClientRow({
     deleteClient(id, {
       onSuccess: () => {
         toast.success(t("client-deleted-success"));
+        setIsDeleteModalOpen(false);
       },
 
       onError: (err) => {
@@ -54,6 +67,9 @@ export default function ClientRow({
 
       {/* Phone */}
       <TableCell>{client.phone}</TableCell>
+
+      {/* National ID */}
+      <TableCell>{client.nationalId}</TableCell>
 
       {/* Subscription name */}
       <TableCell className="text-start">
@@ -109,15 +125,44 @@ export default function ClientRow({
 
       {/* Delete */}
       <TableCell className="text-start uppercase">
-        <Button
-          variant="destructive"
-          className={cn("text-xs h-8 px-2 sm:h-9 sm:px-3")}
-          onClick={() => onDelete(client._id)}
-          disabled={isPending || isSuccess}
-        >
-          {t("delete")}
-          <span>{isPending && <LoaderCircle className="animate-spin" />}</span>
-        </Button>
+        <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+          <DialogTrigger asChild>
+            <Button
+              variant="destructive"
+              className={cn("text-xs h-8 px-2 sm:h-9 sm:px-3")}
+              disabled={isPending || isSuccess}
+            >
+              {t("delete")}
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>{t("delete-client")}</DialogTitle>
+              <DialogDescription>
+                {t("delete-client-confirmation", { name: client.name })}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsDeleteModalOpen(false)}
+                disabled={isPending}
+              >
+                {t("cancel")}
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => onDelete(client._id)}
+                disabled={isPending || isSuccess}
+              >
+                {isPending && (
+                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {t("delete")}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </TableCell>
     </TableRow>
   );

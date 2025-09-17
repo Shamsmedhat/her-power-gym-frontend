@@ -32,16 +32,20 @@ export function AppSidebar({ side = "left" }: AppSidebarProps) {
   const links = SIDEBAR_LINKS(t);
 
   // Hooks
-  const canSee = useUserRole(["admin", "super-admin"]);
+  const adminSuperAdmin = useUserRole(["admin", "super-admin"]);
+  const admin = useUserRole(["admin"]);
 
-  if (canSee) {
+  if (adminSuperAdmin) {
     return (
       <Sidebar side={side}>
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel className="uppercase text-xl font-bold my-3 py-2 italic text-main items-center justify-center">
               <div className="flex items-center gap-2">
-                <Link href="/homepage" className="flex items-center space-x-2">
+                <Link
+                  href={cn(admin ? "/homepage/clients" : "/homepage")}
+                  className="flex items-center space-x-2"
+                >
                   <span>{t("logo")}</span>
                 </Link>
               </div>
@@ -51,6 +55,7 @@ export function AppSidebar({ side = "left" }: AppSidebarProps) {
               <SidebarMenu>
                 {links.map((l) => {
                   const isActive = pathname === l.url;
+                  if (admin && l.title === t("statistics")) return null;
 
                   return (
                     <SidebarMenuItem key={l.title} className="w-full mb-3">

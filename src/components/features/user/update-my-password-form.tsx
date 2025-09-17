@@ -64,7 +64,7 @@ export default function UpdateMyPasswordForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mb-4">
+        <Button className="my-auto">
           <Edit className="mr-2 h-4 w-4" />
           {t("update-password")}
         </Button>

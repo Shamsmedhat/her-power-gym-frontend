@@ -43,6 +43,9 @@ export default async function ClientsList({
           {/* Phone */}
           <TableHead className="text-start">{t("clinet-phone")}</TableHead>
 
+          {/* National ID */}
+          <TableHead className="text-start">{t("national-id-label")}</TableHead>
+
           {/* Subscription */}
           <TableHead className="text-start">{t("subscription")}</TableHead>
 

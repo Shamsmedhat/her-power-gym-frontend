@@ -4,6 +4,7 @@ import ClientCreateForm from "./_components/client-create-form";
 import catchError from "@/lib/utils/catch-error";
 import { getSubscriptions } from "@/lib/apis/subscription.api";
 import { getUsers } from "@/lib/apis/users.api";
+import ClientsTableSkeleton from "@/components/skeletons/clients/clients.skeleton";
 
 export default async function page() {
   // Fetch
@@ -22,7 +23,7 @@ export default async function page() {
         users={payloadUser.data.users}
       />
 
-      <Suspense fallback={<p>loading...</p>}>
+      <Suspense fallback={<ClientsTableSkeleton />}>
         <div className="w-full overflow-x-auto">
           <ClientsList
             subscriptions={payloadSubs?.data.subscriptionPlans}

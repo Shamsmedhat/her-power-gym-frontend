@@ -215,5 +215,8 @@
   "recent-sessions": "Recent Sessions",
   "no-sessions-found": "No sessions found",
   "no-client-data": "No client data available",
-  "statistics": "Statistics"
+  "statistics": "Statistics",
+  "loading-clients": "loading clients...",
+  "delete-client": "Delete Client",
+  "delete-client-confirmation": "Are you sure you want to delete {name}? This action cannot be undone."
 }

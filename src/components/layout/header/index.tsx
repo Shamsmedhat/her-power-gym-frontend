@@ -8,6 +8,8 @@ import { useTranslations } from "next-intl";
 import { SwitchLocale } from "./components/switch-locale";
 import { signOut, useSession } from "next-auth/react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useUserRole } from "@/lib/utils/user-role";
+import UpdateMyPasswordForm from "@/components/features/user/update-my-password-form";
 
 export function Header() {
   // Translation
@@ -18,6 +20,8 @@ export function Header() {
 
   // Hooks
   const { data: session } = useSession();
+  const adminSuperAdmin = useUserRole(["admin", "super-admin"]);
+  const admin = useUserRole(["admin"]);
 
   // Functions
   const toggleMenu = () => {
@@ -41,11 +45,19 @@ export function Header() {
           {/* Navigation */}
           {session ? (
             <div className="flex justify-between items-center w-full">
-              <div className="flex items-center gap-2 uppercase text-xl font-bold my-3 py-2 italic text-main justify-center">
-                <Link href="/" className="flex items-center space-x-2">
-                  <span>{t("logo")}</span>
-                </Link>
-              </div>
+              {!adminSuperAdmin && (
+                <div className="flex items-center gap-2 uppercase text-xl font-bold my-3 py-2 italic text-main justify-center">
+                  <Link href="/" className="flex items-center space-x-2">
+                    <span>{t("logo")}</span>
+                  </Link>
+                </div>
+              )}
+
+              {admin && (
+                <div className="flex items-center justify-center my-auto">
+                  <UpdateMyPasswordForm />
+                </div>
+              )}
               <div className="flex items-end flex-col">
                 <span>{t("hello-user", { user: session.user.name })}</span>
                 <Button
