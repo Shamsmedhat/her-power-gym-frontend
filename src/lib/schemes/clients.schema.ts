@@ -4,6 +4,7 @@ export const useClientsSchema = () => {
   return z.object({
     name: z.string(),
     phone: z.string(),
+    nationalId: z.string().min(1, "National ID is required"),
     subscription: z.object({
       plan: z.string(),
       priceAtPurchase: z.number(),

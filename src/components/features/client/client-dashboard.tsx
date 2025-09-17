@@ -91,6 +91,15 @@ export default function ClientDashboard({ client }: { client: Client }) {
                   <CreditCard className="w-4 h-4 text-muted-foreground" />
                   <div>
                     <p className="text-sm text-muted-foreground">
+                      {t("national-id")}
+                    </p>
+                    <p className="font-medium font-mono">{client.nationalId}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <CreditCard className="w-4 h-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">
                       {t("client-id")}
                     </p>
                     <p className="font-medium font-mono">{client.clientId}</p>

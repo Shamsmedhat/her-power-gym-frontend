@@ -2,6 +2,7 @@ declare type Client = {
   _id: string;
   name: string;
   phone: string;
+  nationalId: string;
   clientId: string;
   createdAt: string;
   updatedAt?: string;

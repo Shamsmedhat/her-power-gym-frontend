@@ -69,6 +69,7 @@ export default function ClientCreateForm({
     defaultValues: {
       name: "",
       phone: "",
+      nationalId: "",
       // clientId: "",
       subscription: {
         plan: "",
@@ -168,6 +169,25 @@ export default function ClientCreateForm({
                       placeholder={t("phone-placeholder")}
                       {...field}
                       autoComplete="tel"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Client national ID */}
+            <FormField
+              control={form.control}
+              name="nationalId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("national-id-label")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t("national-id-placeholder")}
+                      {...field}
+                      autoComplete="off"
                     />
                   </FormControl>
                   <FormMessage />

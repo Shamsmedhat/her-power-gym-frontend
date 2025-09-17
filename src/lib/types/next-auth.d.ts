@@ -26,6 +26,7 @@ declare module "next-auth" {
       _id: string;
       name: string;
       phone: string;
+      nationalId: string;
       clientId: string;
       subscription?: {
         _id: string;

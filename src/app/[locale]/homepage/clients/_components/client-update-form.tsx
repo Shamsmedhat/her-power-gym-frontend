@@ -89,6 +89,7 @@ export default function ClientUpdateForm({
     defaultValues: {
       name: client.name,
       phone: client.phone,
+      nationalId: client.nationalId,
       subscription: {
         plan: client.subscription.plan._id,
         priceAtPurchase: client.subscription.priceAtPurchase,
@@ -195,6 +196,25 @@ export default function ClientUpdateForm({
                       placeholder={t("phone-placeholder")}
                       {...field}
                       autoComplete="tel"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Client national ID */}
+            <FormField
+              control={form.control}
+              name="nationalId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("national-id-label")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t("national-id-placeholder")}
+                      {...field}
+                      autoComplete="off"
                     />
                   </FormControl>
                   <FormMessage />
