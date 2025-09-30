@@ -27,6 +27,7 @@ import { format } from "date-fns";
 export default function ClientDashboard({ client }: { client: Client }) {
   const t = useTranslations();
 
+  console.log("client", client);
   if (!client) {
     return (
       <div className="container mx-auto p-6">
@@ -194,7 +195,7 @@ export default function ClientDashboard({ client }: { client: Client }) {
           </Card>
 
           {/* Private Plan Information */}
-          {client.privatePlan && (
+          {client.privatePlan?.plan && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -319,7 +320,8 @@ export default function ClientDashboard({ client }: { client: Client }) {
           )}
 
           {/* Recent Sessions */}
-          <Card>
+          {/* //TODO for future implementation */}
+          {/* <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="w-5 h-5" />
@@ -359,7 +361,7 @@ export default function ClientDashboard({ client }: { client: Client }) {
                 </p>
               )}
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>

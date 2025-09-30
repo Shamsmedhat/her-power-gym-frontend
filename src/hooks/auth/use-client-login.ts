@@ -1,4 +1,3 @@
-import { useRouter } from "@/i18n/routing";
 import { ClientLoginFields } from "@/lib/schemes/auth.schema";
 import { AuthenticationError } from "@/lib/utils/app-errors";
 import { useMutation } from "@tanstack/react-query";
@@ -7,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 
 export default function useClientLogin() {
   // Navigation
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   // Mutation
@@ -25,11 +23,6 @@ export default function useClientLogin() {
       if (response?.error) throw new AuthenticationError(response.error);
 
       return response;
-    },
-    onSuccess: (data) => {
-      // Redirect to the client dashboard after successful login
-      const callbackUrl = data?.url || "/homepage";
-      router.push(callbackUrl);
     },
   });
 

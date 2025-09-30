@@ -20,6 +20,7 @@ import {
 import { getStatistics } from "@/lib/apis/statistics.api";
 import { StatisticsSkeleton } from "@/components/skeletons/statistics/statistics.skeleton";
 import { format } from "date-fns";
+import { getTranslations } from "next-intl/server";
 
 // Helper functions
 const formatCurrency = (amount: number) => {
@@ -48,6 +49,7 @@ const getCompletionRateColor = (rate: number) => {
 // Main Statistics Component
 const StatisticsContent = async () => {
   const response = await getStatistics();
+  const t = await getTranslations();
 
   if ("statusCode" in response) {
     return (
@@ -55,7 +57,7 @@ const StatisticsContent = async () => {
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-red-600 mb-2">
-            Error Loading Statistics
+            {t("error-loading-statistics")}
           </h3>
           <p className="text-muted-foreground">{response.message}</p>
         </div>
@@ -66,15 +68,15 @@ const StatisticsContent = async () => {
   const { data } = response;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 capitalize">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Statistics Dashboard
+            {t("statistics-dashboard")}
           </h1>
           <p className="text-muted-foreground">
-            Last updated:{" "}
+            {t("last-updated")}{" "}
             {format(new Date(data.statistics.generatedAt), "PPP p")}
           </p>
         </div>
@@ -84,53 +86,69 @@ const StatisticsContent = async () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("total-coaches")}
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatNumber(data.statistics.overview.totalUsers)}
+              {formatNumber(data.statistics.userBreakdown.coaches)}
             </div>
-            <p className="text-xs text-muted-foreground">All system users</p>
+            <p className="text-xs text-muted-foreground">
+              {t("all-system-coaches")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("total-clients")}
+            </CardTitle>
             <UserCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {formatNumber(data.statistics.overview.totalClients)}
             </div>
-            <p className="text-xs text-muted-foreground">Active gym members</p>
+            <p className="text-xs text-muted-foreground">
+              {t("active-gym-members")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("total-income")}
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {formatCurrency(data.statistics.overview.totalIncome)}
             </div>
-            <p className="text-xs text-muted-foreground">Total revenue</p>
+            <p className="text-xs text-muted-foreground">
+              {t("total-revenue")}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Net Profit</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              {t("net-profit")}
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(data.statistics.overview.netProfit)}
             </div>
-            <p className="text-xs text-muted-foreground">After salaries</p>
+            <p className="text-xs text-muted-foreground">
+              {t("after-salaries")}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -142,7 +160,7 @@ const StatisticsContent = async () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Financial Overview
+              {t("financial-overview")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -150,7 +168,7 @@ const StatisticsContent = async () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">
-                    Main Subscriptions
+                    {t("main-subscriptions")}
                   </span>
                   <span className="text-sm font-bold text-blue-600">
                     {formatCurrency(
@@ -159,7 +177,9 @@ const StatisticsContent = async () => {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Private Sessions</span>
+                  <span className="text-sm font-medium">
+                    {t("private-sessions")}
+                  </span>
                   <span className="text-sm font-bold text-purple-600">
                     {formatCurrency(
                       data.statistics.financial.privateSubscriptionIncome
@@ -167,7 +187,9 @@ const StatisticsContent = async () => {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Total Salaries</span>
+                  <span className="text-sm font-medium">
+                    {t("total-salaries")}
+                  </span>
                   <span className="text-sm font-bold text-orange-600">
                     {formatCurrency(data.statistics.financial.totalSalaries)}
                   </span>
@@ -175,13 +197,17 @@ const StatisticsContent = async () => {
               </div>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Average Salary</span>
+                  <span className="text-sm font-medium">
+                    {t("average-salary")}
+                  </span>
                   <span className="text-sm font-bold">
                     {formatCurrency(data.statistics.financial.averageSalary)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Income per Client</span>
+                  <span className="text-sm font-medium">
+                    {t("income-per-client")}
+                  </span>
                   <span className="text-sm font-bold">
                     {formatCurrency(
                       data.statistics.financial.averageIncomePerClient
@@ -198,7 +224,7 @@ const StatisticsContent = async () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <PieChart className="h-5 w-5" />
-              User Breakdown
+              {t("user-breakdown")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -206,7 +232,7 @@ const StatisticsContent = async () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Badge variant="destructive" className="text-xs">
-                    Super Admin
+                    {t("super-admin")}
                   </Badge>
                 </div>
                 <span className="text-sm font-bold">
@@ -216,7 +242,7 @@ const StatisticsContent = async () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Badge variant="default" className="text-xs">
-                    Admin
+                    {t("admin")}
                   </Badge>
                 </div>
                 <span className="text-sm font-bold">
@@ -226,7 +252,7 @@ const StatisticsContent = async () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="text-xs">
-                    Coach
+                    {t("coach")}
                   </Badge>
                 </div>
                 <span className="text-sm font-bold">
@@ -235,7 +261,7 @@ const StatisticsContent = async () => {
               </div>
               <Separator />
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Total Staff</span>
+                <span className="text-sm font-medium">{t("total-staff")}</span>
                 <span className="text-sm font-bold">
                   {data.statistics.userBreakdown.totalStaff}
                 </span>
@@ -252,7 +278,7 @@ const StatisticsContent = async () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
-              Subscription Analytics
+              {t("subscription-analytics")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -261,28 +287,30 @@ const StatisticsContent = async () => {
                 <div className="text-2xl font-bold text-blue-600">
                   {data.statistics.subscriptions.mainPlans}
                 </div>
-                <div className="text-xs text-muted-foreground">Main Plans</div>
+                <div className="text-xs text-muted-foreground">
+                  {t("main-plans")}
+                </div>
               </div>
               <div className="text-center p-3 border rounded-lg">
                 <div className="text-2xl font-bold text-purple-600">
                   {data.statistics.subscriptions.privatePlans}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Private Plans
+                  {t("private-plans")}
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Total Plans</span>
+                <span className="text-sm font-medium">{t("total-plans")}</span>
                 <span className="text-sm font-bold">
                   {data.statistics.subscriptions.totalPlans}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">
-                  Clients with Private Plans
+                  {t("clients-with-private-plans")}
                 </span>
                 <span className="text-sm font-bold">
                   {data.statistics.subscriptions.clientsWithPrivatePlans}
@@ -293,7 +321,7 @@ const StatisticsContent = async () => {
             {Object.keys(data.statistics.subscriptions.planUsage).length >
               0 && (
               <div className="pt-4 border-t">
-                <h4 className="text-sm font-medium mb-3">Plan Usage</h4>
+                <h4 className="text-sm font-medium mb-3">{t("plan-usage")}</h4>
                 <div className="space-y-2">
                   {Object.entries(data.statistics.subscriptions.planUsage)
                     .slice(0, 3)

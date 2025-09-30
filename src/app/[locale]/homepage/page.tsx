@@ -21,27 +21,24 @@ export default async function Page() {
   // Fetch
   const [clientData] = await catchError(getMyClientData(clientId));
 
+  // Coach view
   if (session?.userType === "coach" && clientData === null) {
     return (
       <>
-        <div>
-          <UpdateMyPasswordForm />
-        </div>
-        <div>
-          <Profile />
-        </div>
+        <UpdateMyPasswordForm />
+        <Profile />
       </>
     );
+
+    // Client view
   } else if (session?.userType === "client" && clientData !== null) {
-    return (
-      <>
-        <div>
-          <ClientDashboard client={clientData?.data?.client} />
-        </div>
-      </>
-    );
+    return <ClientDashboard client={clientData?.data?.client} />;
+
+    // Super admin view
   } else if (session?.userType === "super-admin") {
     return <Statistics />;
+
+    // Admin view
   } else if (session?.userType === "admin") {
     redirect({ href: "/homepage/clients", locale: locale });
   }

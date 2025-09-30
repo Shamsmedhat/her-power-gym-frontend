@@ -28,10 +28,6 @@ export function Header() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
   return (
     <header className="sticky flex top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -45,6 +41,7 @@ export function Header() {
           {/* Navigation */}
           {session ? (
             <div className="flex justify-between items-center w-full">
+              {/* Super admin view */}
               {!adminSuperAdmin && (
                 <div className="flex items-center gap-2 uppercase text-xl font-bold my-3 py-2 italic text-main justify-center">
                   <Link href="/" className="flex items-center space-x-2">
@@ -53,6 +50,7 @@ export function Header() {
                 </div>
               )}
 
+              {/* Admin view */}
               {admin && (
                 <div className="flex items-center justify-center my-auto">
                   <UpdateMyPasswordForm />
@@ -105,15 +103,15 @@ export function Header() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="container py-4 space-y-2">
-            <Link
-              href="/"
-              className="block py-2 text-sm font-medium transition-colors hover:text-primary"
-              onClick={closeMenu}
+        <div className="md:hidden content-center">
+          <div className="flex items-end flex-col">
+            <Button
+              variant="link"
+              className="p-0 h-fit font-semibold"
+              onClick={() => signOut()}
             >
-              {t("login")}
-            </Link>
+              {t("logout")} <LogOut />
+            </Button>
           </div>
         </div>
       )}

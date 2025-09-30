@@ -33,6 +33,8 @@ import useClientLogin from "../../../../../hooks/auth/use-client-login";
 import SubmitFeedback from "@/components/common/submit-feedback";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "@/i18n/routing";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   // Translation
@@ -42,6 +44,7 @@ export default function LoginForm() {
   const [loginType, setLoginType] = useState<"user" | "client">("user");
 
   // Hooks
+  const router = useRouter();
   const loginSchema = useLoginSchema();
   const clientLoginSchema = useClientLoginSchema();
   const { isPending, error, login } = useLogin();
@@ -70,11 +73,25 @@ export default function LoginForm() {
 
   // Functions
   const onSubmitUser: SubmitHandler<LoginFields> = (values) => {
-    login(values);
+    login(values, {
+      onSuccess: (data) => {
+        // Redirect to the client dashboard after successful login
+        const callbackUrl = data?.url || "/homepage";
+        toast.success(t("logged-in-successfully"));
+        router.push(callbackUrl);
+      },
+    });
   };
 
   const onSubmitClient: SubmitHandler<ClientLoginFields> = (values) => {
-    clientLogin(values);
+    clientLogin(values, {
+      onSuccess: (data) => {
+        // Redirect to the client dashboard after successful login
+        const callbackUrl = data?.url || "/homepage";
+        toast.success(t("logged-in-successfully"));
+        router.push(callbackUrl);
+      },
+    });
   };
 
   return (
